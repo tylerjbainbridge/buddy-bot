@@ -20,8 +20,13 @@ const client = new Discord.Client();
 
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}.`);
-  const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-  channel.sendMessage('New version of Roomio Bot ready!');
+
+  if (process.env.SOURCE_VERSION) {
+    const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+    channel.sendMessage(
+      `Heroku RoomioBot updated V: ${process.env.SOURCE_VERSION}`
+    );
+  }
 });
 
 client.on('message', handler);
