@@ -10,15 +10,12 @@ export const roomioBotHandler = async msg => {
     msg.content.startsWith(trigger)
   );
 
-  if (!isRoomioMessage) {
-    return;
-  }
+  // Skip if not relevant
+  if (!isRoomioMessage) return;
 
-  const matches = Object.keys(resolvers).filter(key => {
-    return key.split('|').filter(subKey => {
-      return test(subKey, msg.content);
-    }).length;
-  });
+  const matches = Object.keys(resolvers).find(
+    key => key.split('|').filter(subKey => test(subKey, msg.content)).length
+  );
 
   if (matches.length) {
     try {

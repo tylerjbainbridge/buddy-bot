@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
 import { TOKEN } from './token';
-import { roomioBotHandler } from './handler';
+import { roomioBotHandler } from './bot/handler';
 
 roomioBotHandler({
-  content: 'roomiobots hi',
+  content: 'roomiobot hi',
   // Mocked discord API.
   channel: {
     send: console.log
