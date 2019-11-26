@@ -22,6 +22,10 @@ client.on('message', handler);
 
 client.login(TOKEN);
 
+process.on('unhandledRejection', reason => {
+  console.log('Unhandled Rejection at:', reason.stack || reason);
+});
+
 require('http')
   .createServer()
   .listen(3000);
