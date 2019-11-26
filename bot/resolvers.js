@@ -1,8 +1,8 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const weatherAppID = '70da43007f50c4366fbb4685ffe5ef67';
 
-module.exports = {
+export const resolvers = {
   'hello|hi': msg =>
     `hi ${msg.author.username || ''}! type 'help' for a list of commands.`,
   help: () => `heh just kidding, you gotta find em yourself :)`,

@@ -1,12 +1,12 @@
-const resolvers = require('./resolvers');
+import { resolvers } from './resolvers';
 
 const test = (trigger, content) =>
   new RegExp(`\\b${trigger}\\b`, 'i').test(content);
 
-export const roomioBotHandler = async msg => {
+export const handler = async msg => {
   if (msg.content.toLowerCase() === ' ') msg.reply('hi bud!');
 
-  const isRoomioMessage = ['rb', 'roomiobot', 'buddy boy'].some(trigger =>
+  const isRoomioMessage = ['rb', 'roomiobot', 'buddy bot', 'bb'].some(trigger =>
     msg.content.startsWith(trigger)
   );
 
