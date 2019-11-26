@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 const weatherAppID = '70da43007f50c4366fbb4685ffe5ef67';
 
@@ -78,5 +79,5 @@ export const resolvers = {
 
     return data;
   },
-  'tj|thomas': () => ['dj*', 'terry*', 'tom*']
+  'tj|thomas': () => _.sample(['dj*', 'terry*', 'tom*'])
 };
