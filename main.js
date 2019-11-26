@@ -14,9 +14,15 @@ import { handler } from './bot/handler';
 //   }
 // });
 
+const BOT_TEST_CHANNEL_ID = '649013668373200929';
+
 const client = new Discord.Client();
 
-client.once('ready', () => console.log(`Logged in as ${client.user.tag}.`));
+client.once('ready', () => {
+  console.log(`Logged in as ${client.user.tag}.`);
+  const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+  channel.sendMessage('New version of Roomio Bot ready!');
+});
 
 client.on('message', handler);
 
