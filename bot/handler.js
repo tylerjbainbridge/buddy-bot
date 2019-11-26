@@ -7,7 +7,7 @@ export const handler = async msg => {
   if (msg.content.toLowerCase() === ' ') msg.reply('hi bud!');
 
   const isRoomioMessage = ['rb', 'roomiobot', 'buddy bot', 'bb'].some(trigger =>
-    msg.content.startsWith(trigger)
+    msg.content.toLowerCase().startsWith(trigger)
   );
 
   // Skip if not relevant
