@@ -13,15 +13,14 @@ export const handler = async msg => {
   // Skip if not relevant
   if (!isRoomioMessage) return;
 
-  const matches = Object.keys(resolvers).find(
+  const handler = Object.keys(resolvers).find(
     key => key.split('|').filter(subKey => test(subKey, msg.content)).length
   );
 
-  if (matches.length) {
+  if (handler) {
     try {
-      const command = matches.shift();
-      console.log(`command: ${command}`);
-      await msg.channel.send(await resolvers[command](msg));
+      console.log(`command: ${handler}`);
+      await msg.channel.send(await resolvers[handler](msg));
     } catch (e) {
       console.log(e);
       await msg.channel.send('something went wrong :(');
