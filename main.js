@@ -21,11 +21,9 @@ const client = new Discord.Client();
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
-  if (process.env.SOURCE_VERSION) {
+  if (process.env.SOURCE_VERSDYNOION) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(
-      `Heroku RoomioBot updated V: ${process.env.SOURCE_VERSION}`
-    );
+    channel.sendMessage(`Heroku RoomioBot updated DYNO: ${process.env.DYNO}`);
   }
 });
 
