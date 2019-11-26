@@ -20,12 +20,15 @@ export const handler = async msg => {
   if (handler) {
     try {
       console.log(`command: ${handler}`);
+      await msg.react('😃');
       await msg.channel.send(await resolvers[handler](msg));
     } catch (e) {
       console.log(e);
+      await msg.react('😢');
       await msg.channel.send('something went wrong :(');
     }
   } else {
+    await msg.react('🤔');
     await msg.channel.send('command not recognized :(');
   }
 };
