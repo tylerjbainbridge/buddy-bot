@@ -1,0 +1,11 @@
+{
+  "name": "discord-bot",
+  "version": 1,
+  "public": true,
+  "scale": {
+    "bru1": {
+      "min": 1,
+      "max": 1
+    }
+  }
+}
