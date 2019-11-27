@@ -79,5 +79,6 @@ export const resolvers = {
 
     return data;
   },
-  'tj|thomas': () => _.sample(['dj*', 'terry*', 'tom*'])
+  'tj|thomas': () => _.sample(['dj*', 'terry*', 'tom*']),
+  'home|house|github|gh|The Hub': () => `it's private ;)`,
 };
