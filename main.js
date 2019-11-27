@@ -21,10 +21,10 @@ const client = new Discord.Client();
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
-  // if (process.env.SOURCE_VERSDYNOION) {
-  const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-  channel.sendMessage(`Heroku RoomioBot updated DYNO: ${process.env.DYNO}`);
-  // }
+  if (process.env.DYNO) {
+    const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+    channel.sendMessage(`Heroku RoomioBot updated DYNO: ${process.env.DYNO}`);
+  }
 });
 
 client.on('message', handler);
