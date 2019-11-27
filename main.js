@@ -23,7 +23,7 @@ client.once('ready', () => {
 
   if (process.env.DYNO) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(`Heroku RoomioBot updated DYNO: ${process.env.DYNO}: ${process.env.SOURCE_VERSION}`);
+    channel.sendMessage(`Heroku RoomioBot updated DYNO: ${process.env.DYNO}:  ${process.env.SOURCE_VERSION}`);
   }
 });
 
