@@ -81,4 +81,5 @@ export const resolvers = {
   },
   'tj|thomas': () => _.sample(['dj*', 'terry*', 'tom*']),
   'home|house|github|gh|The Hub': () => `it's private ;)`,
+  'sucks': () => 'no you do',
 };
