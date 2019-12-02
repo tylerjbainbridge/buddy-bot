@@ -4,6 +4,10 @@ import moment from "moment-timezone";
 
 import { handler } from "./bot/handler";
 
+process.on("unhandledRejection", reason => {
+  console.log("Unhandled Rejection at:", reason.stack || reason);
+});
+
 const FIFTEEN_MINUTES = 900000;
 
 // Test
@@ -49,10 +53,6 @@ if (process.env.NODE_ENV === "production") {
   client.on("message", handler(client));
 
   client.login(process.env.TOKEN);
-
-  process.on("unhandledRejection", reason => {
-    console.log("Unhandled Rejection at:", reason.stack || reason);
-  });
 }
 
 require("http")
