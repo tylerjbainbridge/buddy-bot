@@ -42,7 +42,7 @@ client.once('ready', () => {
 
 client.on('message', handler);
 
-client.login(TOKEN);
+client.login(process.env.TOKEN);
 
 process.on('unhandledRejection', reason => {
   console.log('Unhandled Rejection at:', reason.stack || reason);
