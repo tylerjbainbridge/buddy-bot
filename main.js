@@ -36,7 +36,7 @@ client.once('ready', () => {
 
   if (process.env.DYNO) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(`Heroku RoomioBot started DYNO: ${process.env.DYNO}`, new Date());
+    channel.sendMessage(`Heroku RoomioBot started (${new Date()}) DYNO: ${process.env.DYNO}`);
   }
 });
 
