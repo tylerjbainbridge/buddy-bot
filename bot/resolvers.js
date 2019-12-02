@@ -1,6 +1,11 @@
 import axios from "axios";
 import _ from "lodash";
-import { mentionUsernames } from "./utils";
+import {
+  mentionUsernames,
+  filterOutBots,
+  findByUsername,
+  mention
+} from "./utils";
 
 const weatherAppID = "70da43007f50c4366fbb4685ffe5ef67";
 const BUDS_WITHOUT_COD = ["jam"];
@@ -87,10 +92,16 @@ export const resolvers = {
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
   cod: (_, client) => {
-    const users = client.users.filterArray(
+    const users = filterOutBots(client.users).filterArray(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
     );
 
-    return `time to play cod!!\n${mentionUsernames(users)}`;
+    const jam = findByUsername(client.users, "jam");
+
+    return `
+      time to play cod!!\n
+      ${mentionUsernames(users)}\n
+      ${mention(jam)} pls play with us :(
+    `;
   }
 };
