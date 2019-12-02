@@ -3,6 +3,8 @@ import axios from 'axios';
 import { TOKEN } from './token';
 import { handler } from './bot/handler';
 
+const FIFTEEN_MINUTES = 900000;
+
 // Test
 // roomioBotHandler({
 //   content: 'roomiobot hi',
@@ -20,7 +22,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
  while (true) {
    // Keep the server alive
-  await sleep(1000);
+  await sleep(FIFTEEN_MINUTES);
   await axios.get('https://v-buddy-bot.herokuapp.com');
  }
 })();
