@@ -92,7 +92,7 @@ export const resolvers = {
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
   cod: (_, client) => {
-    const users = filterOutBots(client.users).filterArray(
+    const users = filterOutBots(client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
     );
 

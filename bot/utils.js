@@ -1,7 +1,7 @@
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
 
-export const filterOutBots = users => users.filterArray(({ bot }) => !bot);
+export const filterOutBots = users => users.filter(({ bot }) => !bot);
 
 export const mention = user => `<@!${user.id}>`;
 
