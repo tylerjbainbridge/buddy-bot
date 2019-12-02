@@ -1,3 +1,3 @@
 # buddy-bot
 
-Add message handlers to the `handler.js` file.
+Add message handlers to the `bot/resolvers.js` file.
