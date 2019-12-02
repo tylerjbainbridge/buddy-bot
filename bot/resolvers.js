@@ -90,7 +90,7 @@ export const resolvers = {
   "home|house|github|gh|The Hub": () => `it's public ;)`,
   sucks: () => "no you do :smile:",
   sandbox: () =>
-    "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
+    "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
   cod: (_, client) => {
     const users = filterOutBots(client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
@@ -101,5 +101,9 @@ export const resolvers = {
     return `time to play cod!!\n${mentionUsernames(users)}\n${mention(
       jam
     )} pls play with us :(`;
-  }
+  },
+  "boy din": (_, client) => {
+    const buds = filterOutBots(client.users);
+    return `boy din?\n${mentionUsernames(buds)}`;
+  },
 };
