@@ -89,6 +89,8 @@ export const resolvers = {
   "tj|thomas": () => _.sample(["dj*", "terry*", "tom*"]),
   "home|house|github|gh|The Hub": () => `it's public ;)`,
   sucks: () => "no you do :smile:",
+  "did you love it did you hate it": () => "what would you rate it?",
+  "you're the best, you're the best": () => "what should _I_ review next?",
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
   cod: (_, client) => {
