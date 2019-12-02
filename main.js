@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import axios from "axios";
 import moment from "moment";
+
 import { handler } from "./bot/handler";
 
 const FIFTEEN_MINUTES = 900000;
@@ -21,7 +22,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
   while (true) {
-    // Keep the server alive
+    // Ping the heroku app every fifteen minutes to keep it from sleeping
     await sleep(FIFTEEN_MINUTES);
     await axios.get("https://v-buddy-bot.herokuapp.com");
   }
@@ -36,11 +37,11 @@ client.once("ready", () => {
 
   if (process.env.DYNO) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(
-      `Heroku RoomioBot started (${moment().format(
-        "MMMM Do YYYY, h:mm:ss a"
-      )})}`
-    );
+    const date = moment()
+      .tz("America/New_York")
+      .format("M/D/YYYY, h:mm:ss a");
+
+    channel.sendMessage(`Heroku RoomioBot started (${date}}`);
   }
 });
 
@@ -53,7 +54,7 @@ process.on("unhandledRejection", reason => {
 });
 
 require("http")
-  .createServer((request, response) => {
+  .createServer((_, response) => {
     response.end("Hello :)");
   })
   .listen(process.env.PORT || 3000);
