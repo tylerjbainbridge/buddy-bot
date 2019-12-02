@@ -98,10 +98,8 @@ export const resolvers = {
 
     const jam = findByUsername(client.users, "jam");
 
-    return `
-      time to play cod!!\n
-      ${mentionUsernames(users)}\n
-      ${mention(jam)} pls play with us :(
-    `;
+    return `time to play cod!!\n${mentionUsernames(users)}\n${mention(
+      jam
+    )} pls play with us :(`;
   }
 };
