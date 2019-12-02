@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import axios from "axios";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import { handler } from "./bot/handler";
 
