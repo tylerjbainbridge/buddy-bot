@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === "production") {
         .tz("America/New_York")
         .format("M/D/YYYY, h:mm:ss a");
 
-      channel.sendMessage(`Heroku RoomioBot started (${date})`);
+      channel.sendMessage(`beep boop RoomioBot updated (${date})`);
     }
   });
 

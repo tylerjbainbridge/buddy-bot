@@ -83,5 +83,7 @@ export const resolvers = {
   "home|house|github|gh|The Hub": () => `it's public ;)`,
   sucks: () => "no you do :smile:",
   sandbox: () =>
-    "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark"
+    "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
+  cod: () =>
+    "time to play cod!! @googleman#4313 @Panderbeah#8947  @DoughyDevin#4646  @Serey#2198  @BrandonKarl#8705 @Tyler#0532"
 };
