@@ -47,7 +47,7 @@ export const resolvers = {
 
     if (!gif) return "no gif found :(";
 
-    return `![gif](${gif})`;
+    return gif;
   },
   "kegparty|give me a beer|random beer|beer": async () => {
     const { data } = await axios.get(
@@ -105,5 +105,5 @@ export const resolvers = {
   "boy din": (_, client) => {
     const buds = filterOutBots(client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
-  },
+  }
 };
