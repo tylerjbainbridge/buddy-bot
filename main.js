@@ -30,28 +30,30 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const BOT_TEST_CHANNEL_ID = "649013668373200929";
 
-const client = new Discord.Client();
+if (process.env.NODE_ENV === "production") {
+  const client = new Discord.Client();
 
-client.once("ready", () => {
-  console.log(`Logged in as ${client.user.tag}.`);
+  client.once("ready", () => {
+    console.log(`Logged in as ${client.user.tag}.`);
 
-  if (process.env.DYNO) {
-    const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    const date = moment()
-      .tz("America/New_York")
-      .format("M/D/YYYY, h:mm:ss a");
+    if (process.env.DYNO) {
+      const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+      const date = moment()
+        .tz("America/New_York")
+        .format("M/D/YYYY, h:mm:ss a");
 
-    channel.sendMessage(`Heroku RoomioBot started (${date}}`);
-  }
-});
+      channel.sendMessage(`Heroku RoomioBot started (${date})`);
+    }
+  });
 
-client.on("message", handler);
+  client.on("message", handler);
 
-client.login(process.env.TOKEN);
+  client.login(process.env.TOKEN);
 
-process.on("unhandledRejection", reason => {
-  console.log("Unhandled Rejection at:", reason.stack || reason);
-});
+  process.on("unhandledRejection", reason => {
+    console.log("Unhandled Rejection at:", reason.stack || reason);
+  });
+}
 
 require("http")
   .createServer((_, response) => {
