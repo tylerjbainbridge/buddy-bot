@@ -15,7 +15,7 @@ export const resolvers = {
     `hi ${msg.author.username || ""}! type 'help' for a list of commands.`,
   help: () => `heh just kidding, you gotta find em yourself :)`,
   "beep boop": () => `i am a robot`,
-  "things jamie has said|thingsjamiehassaid": async () => {
+  "things jamie has said|thingsjamiehassaid|tjhs": async () => {
     const { data } = await axios.get(
       "http://api.reddit.com/r/thingsjamiehassaid"
     );
