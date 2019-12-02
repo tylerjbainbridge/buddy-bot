@@ -1,4 +1,5 @@
 import Discord from 'discord.js';
+import axios from 'axios';
 import { TOKEN } from './token';
 import { handler } from './bot/handler';
 
@@ -13,6 +14,16 @@ import { handler } from './bot/handler';
 //     username: 'Bob'
 //   }
 // });
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+(async () => {
+ while (true) {
+   // Keep the server alive
+  await sleep(1000);
+  await axios.get('https://v-buddy-bot.herokuapp.com');
+ }
+})();
 
 const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
@@ -36,5 +47,7 @@ process.on('unhandledRejection', reason => {
 });
 
 require('http')
-  .createServer()
+  .createServer((request, response) => {
+    response.end('Hello :)');
+  })
   .listen(process.env.PORT || 3000);
