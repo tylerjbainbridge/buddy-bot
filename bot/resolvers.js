@@ -1,6 +1,6 @@
 import axios from "axios";
 import _ from "lodash";
-import { mentionUsernames } from "./util";
+import { mentionUsernames } from "./utils";
 
 const weatherAppID = "70da43007f50c4366fbb4685ffe5ef67";
 const BUDS_WITHOUT_COD = ["jam"];
