@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import axios from 'axios';
+import moment from 'moment';
 import { TOKEN } from './token';
 import { handler } from './bot/handler';
 
@@ -36,7 +37,7 @@ client.once('ready', () => {
 
   if (process.env.DYNO) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(`Heroku RoomioBot started (${new Date()}) DYNO: ${process.env.DYNO}`);
+    channel.sendMessage(`Heroku RoomioBot started (${moment().format('MMMM Do YYYY, h:mm:ss a')})}`);
   }
 });
 
