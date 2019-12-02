@@ -91,7 +91,13 @@ export const resolvers = {
   sucks: () => "no you do :smile:",
   "did you love it did you hate it": () => "what would you rate it?",
   "you're the best, you're the best": () => "what should _I_ review next?",
-  "tell jam to buy cod|you know what to do": () => `${mention(findByUsername(client.users, "jam"))}, buy cod!`,
+  "tell jam to buy cod|you know what to do": (_, client) => {
+    const jam = filterOutBots(client.users).find(
+      ({ username }) => BUDS_WITHOUT_COD.includes(username)
+    );
+    
+    return `${mention(jam)}, buy cod!`
+  },
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
   cod: (_, client) => {
