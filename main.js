@@ -1,8 +1,7 @@
-import Discord from 'discord.js';
-import axios from 'axios';
-import moment from 'moment';
-import { TOKEN } from './token';
-import { handler } from './bot/handler';
+import Discord from "discord.js";
+import axios from "axios";
+import moment from "moment";
+import { handler } from "./bot/handler";
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -18,39 +17,43 @@ const FIFTEEN_MINUTES = 900000;
 //   }
 // });
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
- while (true) {
-   // Keep the server alive
-  await sleep(FIFTEEN_MINUTES);
-  await axios.get('https://v-buddy-bot.herokuapp.com');
- }
+  while (true) {
+    // Keep the server alive
+    await sleep(FIFTEEN_MINUTES);
+    await axios.get("https://v-buddy-bot.herokuapp.com");
+  }
 })();
 
-const BOT_TEST_CHANNEL_ID = '649013668373200929';
+const BOT_TEST_CHANNEL_ID = "649013668373200929";
 
 const client = new Discord.Client();
 
-client.once('ready', () => {
+client.once("ready", () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
   if (process.env.DYNO) {
     const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-    channel.sendMessage(`Heroku RoomioBot started (${moment().format('MMMM Do YYYY, h:mm:ss a')})}`);
+    channel.sendMessage(
+      `Heroku RoomioBot started (${moment().format(
+        "MMMM Do YYYY, h:mm:ss a"
+      )})}`
+    );
   }
 });
 
-client.on('message', handler);
+client.on("message", handler);
 
 client.login(process.env.TOKEN);
 
-process.on('unhandledRejection', reason => {
-  console.log('Unhandled Rejection at:', reason.stack || reason);
+process.on("unhandledRejection", reason => {
+  console.log("Unhandled Rejection at:", reason.stack || reason);
 });
 
-require('http')
+require("http")
   .createServer((request, response) => {
-    response.end('Hello :)');
+    response.end("Hello :)");
   })
   .listen(process.env.PORT || 3000);
