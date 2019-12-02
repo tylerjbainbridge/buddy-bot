@@ -101,7 +101,7 @@ export const resolvers = {
     return `
       time to play cod!!\n
       ${mentionUsernames(users)}\n
-      ${mention(jam)} pls play with us bud :(
+      ${mention(jam)} pls play with us :(
     `;
   }
 };
