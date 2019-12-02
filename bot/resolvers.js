@@ -85,12 +85,12 @@ export const resolvers = {
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
   cod: () =>
-    `time to play cod!! ${[
+    `time to play cod!!\n${[
       "googleman#4313",
       "Panderbeah#8947",
       "DoughyDevin#4646",
       "Serey#2198",
       "BrandonKarl#8705",
       "Tyler#0532"
-    ].map(id => `<@${id}>`)}`
+    ].map(id => `<@${id}>\n`)}`
 };
