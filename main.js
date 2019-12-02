@@ -28,11 +28,11 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   }
 })();
 
-const BOT_TEST_CHANNEL_ID = "649013668373200929";
+export const BOT_TEST_CHANNEL_ID = "649013668373200929";
+
+export const client = new Discord.Client();
 
 if (process.env.NODE_ENV === "production") {
-  const client = new Discord.Client();
-
   client.once("ready", () => {
     console.log(`Logged in as ${client.user.tag}.`);
 
@@ -42,11 +42,11 @@ if (process.env.NODE_ENV === "production") {
         .tz("America/New_York")
         .format("M/D/YYYY, h:mm:ss a");
 
-      channel.sendMessage(`beep boop RoomioBot updated (${date})`);
+      channel.sendMessage(`beep boop BuddyBot updated (${date})`);
     }
   });
 
-  client.on("message", handler);
+  client.on("message", handler(client));
 
   client.login(process.env.TOKEN);
 

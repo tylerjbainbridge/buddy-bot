@@ -5,7 +5,7 @@ const resolverKeys = Object.keys(resolvers);
 const test = (trigger, content) =>
   new RegExp(`\\b${trigger}\\b`, "i").test(content);
 
-export const handler = async msg => {
+export const handler = client => async msg => {
   if (msg.content.toLowerCase() === " ") msg.reply("hi bud!");
 
   const isRoomioMessage = ["rb", "roomiobot", "buddy bot", "bb"].some(trigger =>
@@ -28,7 +28,7 @@ export const handler = async msg => {
     );
 
     if (handler) {
-      responseMessage = await resolvers[handler](msg);
+      responseMessage = await resolvers[handler](msg, client);
     }
   }
 

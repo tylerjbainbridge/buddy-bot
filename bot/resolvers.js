@@ -1,7 +1,9 @@
 import axios from "axios";
 import _ from "lodash";
+import { mentionUsernames } from "./util";
 
 const weatherAppID = "70da43007f50c4366fbb4685ffe5ef67";
+const BUDS_WITHOUT_COD = ["jam"];
 
 export const resolvers = {
   "hello|hi": msg =>
@@ -84,13 +86,11 @@ export const resolvers = {
   sucks: () => "no you do :smile:",
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-1ce1p?fontsize=14&hidenavigation=1&theme=dark",
-  cod: () =>
-    `time to play cod!!\n${[
-      "googleman#4313",
-      "Panderbeah#8947",
-      "DoughyDevin#4646",
-      "Serey#2198",
-      "BrandonKarl#8705",
-      "Tyler#0532"
-    ].map(id => `<@${id}>\n`)}`
+  cod: (_, client) => {
+    const users = client.users.filterArray(
+      ({ username }) => !BUDS_WITHOUT_COD.includes(username)
+    );
+
+    return `time to play cod!!\n${mentionUsernames(users)}`;
+  }
 };
