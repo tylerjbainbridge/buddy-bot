@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === "production") {
         .tz("America/New_York")
         .format("M/D/YYYY, h:mm:ss a");
 
-      channel.sendMessage(`beep boop BuddyBot updated (${date})`);
+      channel.send(`beep boop BuddyBot updated (${date})`);
     }
   });
 

@@ -19,7 +19,7 @@ export const handler = client => async msg => {
 
   // Help menu
   if (msg.content.includes("help")) {
-    responseMessage = `Here are the commands I support :)\n${resolverKeys.join(
+    responseMessage = `Here are the commands I support :)\n${resolverKeys.map(key => `\`${key}\``).join(
       "\n"
     )}`;
   } else {
