@@ -8,27 +8,27 @@ const test = (trigger, content) =>
 export const handler = client => async msg => {
   if (msg.content.toLowerCase() === " ") msg.reply("hi bud!");
 
-  const isRoomioMessage = ["rb", "roomiobot", "buddy bot", "bb"].some(trigger =>
+  const trigger = ["rb", "roomiobot", "buddy bot", "bb"].find(trigger =>
     msg.content.toLowerCase().startsWith(trigger)
   );
 
   // Skip if not relevant
-  if (!isRoomioMessage) return;
+  if (!trigger) return;
 
   let responseMessage = "command not recognized :(";
 
   // Help menu
   if (msg.content.includes("help")) {
-    responseMessage = `Here are the commands I support :)\n${resolverKeys.map(key => `\`${key}\``).join(
-      "\n"
-    )}`;
+    responseMessage = `Here are the commands I support :)\n${resolverKeys
+      .map(key => `\`${key}\``)
+      .join("\n")}`;
   } else {
     const handler = resolverKeys.find(key =>
       key.split("|").find(subKey => test(subKey, msg.content))
     );
 
     if (handler) {
-      responseMessage = await resolvers[handler](msg, client);
+      responseMessage = await resolvers[handler](msg, client, trigger);
     }
   }
 

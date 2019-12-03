@@ -11,32 +11,32 @@ process.on("unhandledRejection", reason => {
 const FIFTEEN_MINUTES = 900000;
 
 // Test
-// roomioBotHandler({
-//   content: 'roomiobot hi',
+// handler({
+//   content: "bb gif monkey",
 //   // Mocked discord API.
 //   channel: {
 //     send: console.log
 //   },
 //   author: {
-//     username: 'Bob'
+//     username: "Bob"
 //   }
 // });
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-(async () => {
-  while (true) {
-    // Ping the heroku app every fifteen minutes to keep it from sleeping
-    await sleep(FIFTEEN_MINUTES);
-    await axios.get("https://v-buddy-bot.herokuapp.com");
-  }
-})();
 
 export const BOT_TEST_CHANNEL_ID = "649013668373200929";
 
 export const client = new Discord.Client();
 
 if (process.env.NODE_ENV === "production") {
+  (async () => {
+    while (true) {
+      // Ping the heroku app every fifteen minutes to keep it from sleeping
+      await sleep(FIFTEEN_MINUTES);
+      await axios.get("https://v-buddy-bot.herokuapp.com");
+    }
+  })();
+
   client.once("ready", () => {
     console.log(`Logged in as ${client.user.tag}.`);
 

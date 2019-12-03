@@ -26,18 +26,19 @@ export const resolvers = {
 
     return children[index].data.title;
   },
-  gif: async msg => {
+  gif: async (msg, _, trigger) => {
     const q = msg.content
-      .split("rb gif")
+      .split(`${trigger} gif`)
       .map(word => word.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .pop();
 
     const {
       data: {
         data: { image_url: gif }
       }
     } = await axios.get(
-      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&q=${q}`
+      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${q}`
     );
 
     if (!gif) return "no gif found :(";
