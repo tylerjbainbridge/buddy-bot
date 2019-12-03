@@ -26,18 +26,19 @@ export const handler = client => async msg => {
     let handler;
 
     for (let i = 0; i < resolverKeys.length; i++) {
-      const baseKey = resolverKeys[i];
-      const exactKey = baseKey.split("|").find(subKey => test(subKey, command));
+      const base = resolverKeys[i];
+      const exact = base.split("|").find(subKey => test(subKey, command));
 
-      if (exactKey) {
-        handler = { baseKey, exactKey };
+      if (exact) {
+        handler = { base, exact };
+        break;
       }
     }
 
     if (handler) {
-      const subCommand = removeFromString(command, handler.exactKey);
+      const subCommand = removeFromString(command, handler.exact);
 
-      responseMessage = await resolvers[handler.baseKey](subCommand, {
+      responseMessage = await resolvers[handler.base](subCommand, {
         msg,
         client,
         trigger
