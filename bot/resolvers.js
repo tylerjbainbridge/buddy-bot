@@ -27,22 +27,17 @@ export const resolvers = {
     return children[index].data.title;
   },
   gif: async msg => {
-    const parsedmsg = msg.content
+    const q = msg.content
       .split("rb gif")
       .map(word => word.trim())
-      .filter(word => word);
-
-    const tag = parsedmsg
-      .pop()
-      .split(" ")
-      .shift();
+      .filter(Boolean);
 
     const {
       data: {
         data: { image_url: gif }
       }
     } = await axios.get(
-      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${tag}`
+      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&q=${q}`
     );
 
     if (!gif) return "no gif found :(";
@@ -92,11 +87,11 @@ export const resolvers = {
   "did you love it did you hate it": () => "what would you rate it?",
   "you're the best, you're the best": () => "what should _I_ review next?",
   "tell jam to buy cod|you know what to do": (_, client) => {
-    const jam = filterOutBots(client.users).find(
-      ({ username }) => BUDS_WITHOUT_COD.includes(username)
+    const jam = filterOutBots(client.users).find(({ username }) =>
+      BUDS_WITHOUT_COD.includes(username)
     );
-    
-    return `${mention(jam)}, buy cod!`
+
+    return `${mention(jam)}, buy cod!`;
   },
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
