@@ -4,15 +4,16 @@ import {
   mentionUsernames,
   filterOutBots,
   findByUsername,
-  mention
+  mention,
+  removeFromString
 } from "./utils";
 
 const weatherAppID = "70da43007f50c4366fbb4685ffe5ef67";
 const BUDS_WITHOUT_COD = ["jam"];
 
 export const resolvers = {
-  "hello|hi": msg =>
-    `hi ${msg.author.username || ""}! type 'help' for a list of commands.`,
+  "hello|hi": (_, { msg }) =>
+    `hey ${msg.author.username || ""}! im your bot bud`,
   help: () => `heh just kidding, you gotta find em yourself :)`,
   "beep boop": () => `i am a robot`,
   "things jamie has said|thingsjamiehassaid|tjhs": async () => {
@@ -26,19 +27,13 @@ export const resolvers = {
 
     return children[index].data.title;
   },
-  gif: async (msg, _, trigger) => {
-    const q = msg.content
-      .split(`${trigger} gif`)
-      .map(word => word.trim())
-      .filter(Boolean)
-      .pop();
-
+  gif: async command => {
     const {
       data: {
         data: { image_url: gif }
       }
     } = await axios.get(
-      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${q}`
+      `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${command}`
     );
 
     if (!gif) return "no gif found :(";
@@ -56,21 +51,11 @@ export const resolvers = {
       style: { name: styleName, description }
     } = data;
 
-    return `Courtesy of Key Party&#013;&#010;&#013;&#010;Name: ${name}&#013; &#010;&#013; &#010;Style: ${styleName}&#013; &#010;&#013;&#013; &#010;Description: ${description}&#013; &#010;&#013; &#010;More info: ${link}`;
+    return `Courtesy of Key Party\n\n\nName: ${name}\n\n\nStyle: ${styleName}\n\n\nDescription: ${description}\n\n\nMore info: ${link}`;
   },
-  "weather in": async msg => {
-    const parsedmsg = msg.content
-      .split("rb weather in")
-      .map(word => word.trim())
-      .filter(word => word);
-
-    const city = parsedmsg
-      .pop()
-      .split(" ")
-      .shift();
-
+  "weather in": async command => {
     const { data: weatherData } = await axios.get(
-      `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherAppID}`
+      `http://api.openweathermap.org/data/2.5/weather?appid=${weatherAppID}&q=${command}`
     );
 
     if (!weatherData) return "no weather found :(";
@@ -88,26 +73,24 @@ export const resolvers = {
   "did you love it did you hate it": () => "what would you rate it?",
   "you're the best, you're the best": () => "what should _I_ review next?",
   "tell jam to buy cod|you know what to do": (_, client) => {
-    const jam = filterOutBots(client.users).find(({ username }) =>
-      BUDS_WITHOUT_COD.includes(username)
-    );
+    const jam = findByUsername(client.users, "jam");
 
     return `${mention(jam)}, buy cod!`;
   },
   sandbox: () =>
     "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
-  cod: (_, client) => {
+  cod: (command, { client }) => {
     const users = filterOutBots(client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
     );
 
     const jam = findByUsername(client.users, "jam");
 
-    return `time to play cod!!\n${mentionUsernames(users)}\n${mention(
-      jam
-    )} pls play with us :(`;
+    return `let's play cod ${command || "now"}\n${mentionUsernames(
+      users
+    )}\n${mention(jam)} pls play with us :(`;
   },
-  "boy din": (_, client) => {
+  "boy din": (_, { client }) => {
     const buds = filterOutBots(client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
   }

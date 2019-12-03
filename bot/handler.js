@@ -1,9 +1,7 @@
 import { resolvers } from "./resolvers";
+import { test, removeFromString } from "./utils";
 
 const resolverKeys = Object.keys(resolvers);
-
-const test = (trigger, content) =>
-  new RegExp(`\\b${trigger}\\b`, "i").test(content);
 
 export const handler = client => async msg => {
   if (msg.content.toLowerCase() === " ") msg.reply("hi bud!");
@@ -15,6 +13,8 @@ export const handler = client => async msg => {
   // Skip if not relevant
   if (!trigger) return;
 
+  const command = removeFromString(msg.content, trigger);
+
   let responseMessage = "command not recognized :(";
 
   // Help menu
@@ -23,12 +23,25 @@ export const handler = client => async msg => {
       .map(key => `\`${key}\``)
       .join("\n")}`;
   } else {
-    const handler = resolverKeys.find(key =>
-      key.split("|").find(subKey => test(subKey, msg.content))
-    );
+    let handler;
+
+    for (let i = 0; i < resolverKeys.length; i++) {
+      const baseKey = resolverKeys[i];
+      const exactKey = baseKey.split("|").find(subKey => test(subKey, command));
+
+      if (exactKey) {
+        handler = { baseKey, exactKey };
+      }
+    }
 
     if (handler) {
-      responseMessage = await resolvers[handler](msg, client, trigger);
+      const subCommand = removeFromString(command, handler.exactKey);
+
+      responseMessage = await resolvers[handler.baseKey](subCommand, {
+        msg,
+        client,
+        trigger
+      });
     }
   }
 
