@@ -13,7 +13,7 @@ const FIFTEEN_MINUTES = 900000;
 // Test
 // (async () => {
 //   await handler()({
-//     content: 'bb tjhs delete most recent',
+//     content: 'bb tjhs delete last',
 //     // Mocked discord API.
 //     channel: {
 //       send: console.log

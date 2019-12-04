@@ -21,7 +21,7 @@ export const resolvers = {
   'things jamie has said|thingsjamiehassaid|tjhs': async (command, config) => {
     const resolvers = {
       add: title => postToJamieReddit(title),
-      'delete most recent': async () => {
+      'delete last': async () => {
         console.log('hi');
         const latestPost = await reddit
           .getSubreddit('thingsjamiehassaid')
