@@ -54,8 +54,8 @@ export const handler = client => async msg => {
 
   const collector = msg.createReactionCollector(filter, { time: 300000 });
 
-  collector.on('collect', r => {
-    msg.channel.send(postToJamieReddit(msg.content));
+  collector.on('collect', async r => {
+    msg.channel.send(await postToJamieReddit(msg.content));
     collector.stop();
   });
 };
