@@ -6,18 +6,22 @@ import {
   postToJamieReddit
 } from "./utils";
 
+const TRIGGERS = [
+  "bot",
+  "robot",
+  "alexa",
+  "rb",
+  "roomiobot",
+  "buddy bot",
+  "bb"
+];
+
 const resolverKeys = Object.keys(resolvers);
 
 export const handler = client => async msg => {
-  const trigger = [
-    "bot",
-    "robot",
-    "alexa",
-    "rb",
-    "roomiobot",
-    "buddy bot",
-    "bb"
-  ].find(trigger => msg.content.toLowerCase().startsWith(trigger));
+  const trigger = TRIGGERS.find(trigger =>
+    msg.content.toLowerCase().startsWith(trigger)
+  );
 
   // Skip if not relevant
   if (trigger) {
@@ -26,7 +30,11 @@ export const handler = client => async msg => {
     let responseMessage = "command not recognized :(";
 
     // Help menu
-    if (msg.content.includes("help")) {
+    if (msg.content.includes("triggers")) {
+      responseMessage = `I respond to\n${TRIGGERS.map(key => `\`${key}\``).join(
+        "\n"
+      )}`;
+    } else if (msg.content.includes("help")) {
       responseMessage = `Here are the commands I support :)\n${resolverKeys
         .map(key => `\`${key}\``)
         .join("\n")}`;
