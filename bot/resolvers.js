@@ -28,7 +28,7 @@ export const resolvers = {
 
         await latestPost.delete();
 
-        return `Deleted\n>${latestPost.title}`;
+        return `Deleted\n> ${latestPost.title}`;
       }
     };
 
