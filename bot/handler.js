@@ -22,9 +22,7 @@ export const handler = client => async msg => {
     } else {
       const match = getResolver(resolvers, command);
 
-
       if (match) {
-        console.log(resolverKeys, match)
         responseMessage = await getMessageFromResolver(resolvers, match, {
           msg,
           client,

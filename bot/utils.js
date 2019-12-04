@@ -37,8 +37,8 @@ export const getMessageFromResolver = async (resolvers, match, config) => resolv
 export const postToJamieReddit = async (title) => {
   try {
     const submission = await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
-    return `https://www.reddit.com/r/thingsjamiehassaid/comments/${submission.id}`;
+    return `https://www.reddit.com/r/thingsjamiehassaid/comments/${submission.name}`;
   } catch (e) {
-    return e.message;
+    return e.message || 'Something went wrong';
   }
 }
