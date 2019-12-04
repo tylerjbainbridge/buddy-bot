@@ -48,7 +48,7 @@ export const handler = client => async msg => {
   }
 
   const filter = (reaction, user) => {
-    console.log('reaction!', reaction.emoji.name)
+    console.log('reaction!', user.username, reaction.emoji.name)
     return ['tyler', 'jam'].includes(user.username) && ['😇'].includes(reaction.emoji.name);
   };
 
