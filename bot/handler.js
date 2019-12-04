@@ -52,20 +52,22 @@ export const handler = client => async msg => {
     }
   }
 
-  const filter = (reaction, user) => {
-    console.log("reaction!", user.username, reaction.emoji.name);
-    return (
-      ["jam"].includes(user.username.toLowerCase()) &&
-      ["😇"].includes(reaction.emoji.name)
-    );
-  };
+  if (msg.author.username === "jam") {
+    const filter = (reaction, user) => {
+      console.log("reaction!", user.username, reaction.emoji.name);
+      return (
+        ["jam"].includes(user.username.toLowerCase()) &&
+        ["😇"].includes(reaction.emoji.name)
+      );
+    };
 
-  const ONE_HOUR = 3600000;
+    const ONE_HOUR = 3600000;
 
-  const collector = msg.createReactionCollector(filter, { time: ONE_HOUR });
+    const collector = msg.createReactionCollector(filter, { time: ONE_HOUR });
 
-  collector.on("collect", async r => {
-    msg.channel.send(await postToJamieReddit(msg.content));
-    collector.stop();
-  });
+    collector.on("collect", async r => {
+      msg.channel.send(await postToJamieReddit(msg.content));
+      collector.stop();
+    });
+  }
 };
