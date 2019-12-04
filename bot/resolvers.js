@@ -22,14 +22,13 @@ export const resolvers = {
     const resolvers = {
       add: title => postToJamieReddit(title),
       'delete last': async () => {
-        console.log('hi');
         const latestPost = await reddit
           .getSubreddit('thingsjamiehassaid')
           .getNew()[0];
-        // console.log({ latestPost });
+
         await latestPost.delete();
 
-        return 'post deleted';
+        return `Deleted\n>${latestPost.title}`;
       }
     };
 

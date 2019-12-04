@@ -40,8 +40,8 @@ export const postToJamieReddit = async title => {
     const submission = await reddit
       .getSubreddit('thingsjamiehassaid')
       .submitSelfpost({ title });
-    const id = submission.name.split('_')[1];
-    return `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
+
+    return submission.url;
   } catch (e) {
     return e.message || 'Something went wrong';
   }
