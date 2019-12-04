@@ -1,19 +1,19 @@
-import { resolvers } from "./resolvers";
+import { resolvers } from './resolvers';
 import {
   getResolver,
   getMessageFromResolver,
   removeFromString,
   postToJamieReddit
-} from "./utils";
+} from './utils';
 
 const TRIGGERS = [
-  "bot",
-  "robot",
-  "alexa",
-  "rb",
-  "roomiobot",
-  "buddy bot",
-  "bb"
+  'bot',
+  'robot',
+  'alexa',
+  'rb',
+  'roomiobot',
+  'buddy bot',
+  'bb'
 ];
 
 const resolverKeys = Object.keys(resolvers);
@@ -27,17 +27,17 @@ export const handler = client => async msg => {
   if (trigger) {
     const command = removeFromString(msg.content, trigger);
 
-    let responseMessage = "command not recognized :(";
+    let responseMessage = 'command not recognized :(';
 
     // Help menu
-    if (msg.content.includes("triggers")) {
+    if (msg.content.includes('triggers')) {
       responseMessage = `I respond to\n${TRIGGERS.map(key => `\`${key}\``).join(
-        "\n"
+        '\n'
       )}`;
-    } else if (msg.content.includes("help")) {
+    } else if (msg.content.includes('help')) {
       responseMessage = `Here are the commands I support :)\n${resolverKeys
         .map(key => `\`${key}\``)
-        .join("\n")}`;
+        .join('\n')}`;
     } else {
       const match = getResolver(resolvers, command);
 
@@ -53,34 +53,31 @@ export const handler = client => async msg => {
 
     if (responseMessage) {
       try {
-        await msg.react("😃");
+        await msg.react('😃');
         await msg.channel.send(responseMessage);
       } catch (e) {
         console.log(e);
-        await msg.react("😢");
-        await msg.channel.send("something went wrong :(");
+        await msg.react('😢');
+        await msg.channel.send('something went wrong :(');
       }
     } else {
-      await msg.react("🤔");
-      await msg.channel.send("command not recognized :(");
+      await msg.react('🤔');
+      await msg.channel.send('command not recognized :(');
     }
   }
 
-  if (msg.author.username === "jam") {
+  if (['tyler', 'jam'].includes(msg.author.username.toLowerCase())) {
     const ONE_HOUR = 3600000;
 
     const collector = msg.createReactionCollector(
       (reaction, user) => {
-        console.log("reaction!", user.username, reaction.emoji.name);
-        return (
-          ["jam"].includes(user.username.toLowerCase()) &&
-          ["😇"].includes(reaction.emoji.name)
-        );
+        console.log('reaction!', user.username, reaction.emoji.name);
+        return ['😇'].includes(reaction.emoji.name);
       },
       { time: ONE_HOUR }
     );
 
-    collector.on("collect", async r => {
+    collector.on('collect', async r => {
       msg.channel.send(await postToJamieReddit(msg.content));
       collector.stop();
     });
