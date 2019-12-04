@@ -79,7 +79,7 @@ export const resolvers = {
   },
   sandbox: () =>
     "https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot",
-    repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
+  repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
   cod: (command, { client }) => {
     const users = filterOutBots(client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
