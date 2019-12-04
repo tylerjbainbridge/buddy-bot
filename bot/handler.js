@@ -47,6 +47,12 @@ export const handler = client => async msg => {
     }
   }
 
-  const collected = await msg.awaitReactions((reaction, user) => user.username === 'jam' && ['😇'].includes(reaction.emoji.name), { max: 100, time: 300000 })
-  if (collected.size) msg.channel.send(postToJamieReddit(msg.content));
+  const filter = (reaction, user) => ['tyler', 'jam'].includes(user.username) && ['😇'].includes(reaction.emoji.name);
+
+  const collector = msg.createReactionCollector(filter, { time: 300000 });
+
+  collector.on('collect', r => {
+    msg.channel.send(postToJamieReddit(msg.content));
+    collector.stop();
+  });
 };
