@@ -49,7 +49,7 @@ export const handler = client => async msg => {
 
   const filter = (reaction, user) => {
     console.log('reaction!', user.username, reaction.emoji.name)
-    return ['tyler', 'jam'].includes(user.username) && ['😇'].includes(reaction.emoji.name);
+    return ['tyler', 'jam'].includes(user.username.toLowerCase()) && ['😇'].includes(reaction.emoji.name);
   };
 
   const collector = msg.createReactionCollector(filter, { time: 300000 });
