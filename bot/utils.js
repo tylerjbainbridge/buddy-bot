@@ -1,3 +1,5 @@
+import { reddit } from './config';
+
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
 
@@ -31,3 +33,8 @@ export const getResolver = (resolvers, command) => {
 }
 
 export const getMessageFromResolver = async (resolvers, match, config) => resolvers[match.base](match.sub, config);
+
+export const postToJamieReddit = async (title) => {
+  const submission = await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
+  return `https://www.reddit.com/r/thingsjamiehassaid/comments/${submission.id}`;
+}

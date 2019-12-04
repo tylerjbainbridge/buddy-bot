@@ -7,6 +7,7 @@ import {
   mention,
   getResolver,
   getMessageFromResolver,
+  postToJamieReddit,
 } from "./utils";
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js'
@@ -19,10 +20,7 @@ export const resolvers = {
   "beep boop": () => `i am a robot`,
   "things jamie has said|thingsjamiehassaid|tjhs": async (command, config) => {
     const resolvers = {
-      add: async (title) => {
-        await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
-        return 'posted!';
-      }
+      add: async (title) => postToJamieReddit(title),
     };
 
     const match = getResolver(resolvers, command);
