@@ -1,5 +1,10 @@
 import { resolvers } from "./resolvers";
-import { getResolver, getMessageFromResolver, removeFromString, postToJamieReddit } from "./utils";
+import {
+  getResolver,
+  getMessageFromResolver,
+  removeFromString,
+  postToJamieReddit
+} from "./utils";
 
 const resolverKeys = Object.keys(resolvers);
 
@@ -48,13 +53,16 @@ export const handler = client => async msg => {
   }
 
   const filter = (reaction, user) => {
-    console.log('reaction!', user.username, reaction.emoji.name)
-    return ['tyler', 'jam'].includes(user.username.toLowerCase()) && ['😇'].includes(reaction.emoji.name);
+    console.log("reaction!", user.username, reaction.emoji.name);
+    return (
+      ["jam"].includes(user.username.toLowerCase()) &&
+      ["😇"].includes(reaction.emoji.name)
+    );
   };
 
   const collector = msg.createReactionCollector(filter, { time: 300000 });
 
-  collector.on('collect', async r => {
+  collector.on("collect", async r => {
     msg.channel.send(await postToJamieReddit(msg.content));
     collector.stop();
   });
