@@ -28,6 +28,7 @@ export const handler = client => async msg => {
       const match = getResolver(resolvers, command);
 
       if (match) {
+        console.log(`command: ${match.base}`);
         responseMessage = await getMessageFromResolver(resolvers, match, {
           msg,
           client,
@@ -38,7 +39,6 @@ export const handler = client => async msg => {
 
     if (responseMessage) {
       try {
-        console.log(`command: ${handler}`);
         await msg.react("😃");
         await msg.channel.send(responseMessage);
       } catch (e) {
