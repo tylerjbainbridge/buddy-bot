@@ -78,7 +78,8 @@ export const handler = client => async msg => {
     );
 
     collector.on('collect', async r => {
-      msg.channel.send(await postToJamieReddit(msg.content));
+      const url = await postToJamieReddit(msg.content);
+      msg.channel.send(`> ${msg.content}\n${url}`);
       collector.stop();
     });
   }
