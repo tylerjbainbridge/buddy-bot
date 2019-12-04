@@ -39,6 +39,6 @@ export const postToJamieReddit = async (title) => {
     const submission = await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
     return `https://www.reddit.com/r/thingsjamiehassaid/comments/${submission.id}`;
   } catch (e) {
-    return e;
+    return e.message;
   }
 }
