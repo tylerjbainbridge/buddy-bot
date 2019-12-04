@@ -11,21 +11,21 @@ process.on('unhandledRejection', reason => {
 const FIFTEEN_MINUTES = 900000;
 
 // Test
-(async () => {
-  await handler()({
-    content: 'bb tjhs delete most recent',
-    // Mocked discord API.
-    channel: {
-      send: console.log
-    },
-    react: () => {},
-    author: {
-      username: 'Bob'
-    }
-  });
+// (async () => {
+//   await handler()({
+//     content: 'bb tjhs delete most recent',
+//     // Mocked discord API.
+//     channel: {
+//       send: console.log
+//     },
+//     react: () => {},
+//     author: {
+//       username: 'Bob'
+//     }
+//   });
 
-  process.exit();
-})();
+//   process.exit();
+// })();
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
