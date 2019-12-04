@@ -1,14 +1,15 @@
 import { resolvers } from "./resolvers";
-import { getHandler, removeFromString } from "./utils";
+import { getResolver, getMessageFromResolver, removeFromString } from "./utils";
 
 const resolverKeys = Object.keys(resolvers);
 
 export const handler = client => async msg => {
-  if (msg.content.toLowerCase() === " ") msg.reply("hi bud!");
-
   const trigger = ["rb", "roomiobot", "buddy bot", "bb"].find(trigger =>
     msg.content.toLowerCase().startsWith(trigger)
   );
+
+  console.log('hello');
+
 
   // Skip if not relevant
   if (!trigger) return;
@@ -23,10 +24,12 @@ export const handler = client => async msg => {
       .map(key => `\`${key}\``)
       .join("\n")}`;
   } else {
-    const handler = getHandler(resolvers, command);
+    const match = getResolver(resolvers, command);
 
-    if (handler) {
-      responseMessage = await resolvers[handler.base](handler.sub, {
+
+    if (match) {
+      console.log(resolverKeys, match)
+      responseMessage = await getMessageFromResolver(resolvers, match, {
         msg,
         client,
         trigger

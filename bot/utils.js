@@ -14,7 +14,7 @@ export const test = (trigger, content) =>
 export const removeFromString = (string, toRemove) =>
   string.replace(new RegExp(toRemove, "g"), "").trim();
 
-export const getHandler = async (resolvers, command) => {
+export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
   for (let i = 0; i < resolverKeys.length; i++) {
@@ -29,3 +29,5 @@ export const getHandler = async (resolvers, command) => {
 
   return null;
 }
+
+export const getMessageFromResolver = async (resolvers, match, config) => resolvers[match.base](match.sub, config);

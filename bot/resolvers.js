@@ -1,13 +1,12 @@
 import axios from "axios";
 import _ from "lodash";
-import snoowrap from 'snoowrap';
 import {
   mentionUsernames,
   filterOutBots,
   findByUsername,
   mention,
-  removeFromString,
-  getHandler,
+  getResolver,
+  getMessageFromResolver,
 } from "./utils";
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js'
@@ -26,13 +25,13 @@ export const resolvers = {
       }
     };
 
-    const handler = getHandler(resolvers, command);
+    const match = getResolver(resolvers, command);
 
-    if (handler) {
-      return resolvers[handler.base](handler.sub);
+    if (match) {
+      return getMessageFromResolver(resolvers, match, config);
     }
 
-    // Get random
+    // Default: get random
     const submission = reddit.getSubreddit('thingsjamiehassaid').getRandomSubmission();
     return submission.title;
   },
