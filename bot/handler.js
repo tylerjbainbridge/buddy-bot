@@ -60,7 +60,9 @@ export const handler = client => async msg => {
     );
   };
 
-  const collector = msg.createReactionCollector(filter, { time: 300000 });
+  const ONE_HOUR = 3600000;
+
+  const collector = msg.createReactionCollector(filter, { time: ONE_HOUR });
 
   collector.on("collect", async r => {
     msg.channel.send(await postToJamieReddit(msg.content));
