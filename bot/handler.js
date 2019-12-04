@@ -66,7 +66,7 @@ export const handler = client => async msg => {
     }
   }
 
-  if (["jam"].includes(msg.author.username)) {
+  if (msg.author.username === "jam") {
     const ONE_HOUR = 3600000;
 
     const collector = msg.createReactionCollector(
