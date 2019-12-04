@@ -49,6 +49,6 @@ export const handler = client => async msg => {
     }
   }
 
-  const collected = await msg.awaitReactions((reaction, user) => user.username === 'jam' && ['😇'].includes(reaction.emoji.name), { max: 100, time: 60000, errors: ['time'] })
+  const collected = await msg.awaitReactions((reaction, user) => user.username === 'jam' && ['😇'].includes(reaction.emoji.name), { max: 100, time: 300000 })
   if (collected.size) msg.channel.send(postToJamieReddit(msg.content));
 };
