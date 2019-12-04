@@ -9,9 +9,15 @@ import {
 const resolverKeys = Object.keys(resolvers);
 
 export const handler = client => async msg => {
-  const trigger = ["rb", "roomiobot", "buddy bot", "bb"].find(trigger =>
-    msg.content.toLowerCase().startsWith(trigger)
-  );
+  const trigger = [
+    "bot",
+    "robot",
+    "alexa",
+    "rb",
+    "roomiobot",
+    "buddy bot",
+    "bb"
+  ].find(trigger => msg.content.toLowerCase().startsWith(trigger));
 
   // Skip if not relevant
   if (trigger) {
