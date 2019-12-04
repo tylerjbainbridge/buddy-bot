@@ -1,62 +1,67 @@
-import Discord from "discord.js";
-import axios from "axios";
-import moment from "moment-timezone";
+import Discord from 'discord.js';
+import axios from 'axios';
+import moment from 'moment-timezone';
 
-import { handler } from "./bot/handler";
+import { handler } from './bot/handler';
 
-process.on("unhandledRejection", reason => {
-  console.log("Unhandled Rejection at:", reason.stack || reason);
+process.on('unhandledRejection', reason => {
+  console.log('Unhandled Rejection at:', reason.stack || reason);
 });
 
 const FIFTEEN_MINUTES = 900000;
 
 // Test
-// handler({
-//   content: "bb gif monkey",
-//   // Mocked discord API.
-//   channel: {
-//     send: console.log
-//   },
-//   author: {
-//     username: "Bob"
-//   }
-// });
+(async () => {
+  await handler()({
+    content: 'bb tjhs delete most recent',
+    // Mocked discord API.
+    channel: {
+      send: console.log
+    },
+    react: () => {},
+    author: {
+      username: 'Bob'
+    }
+  });
+
+  process.exit();
+})();
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export const BOT_TEST_CHANNEL_ID = "649013668373200929";
+export const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
 export const client = new Discord.Client();
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
   (async () => {
     while (true) {
       // Ping the heroku app every fifteen minutes to keep it from sleeping
       await sleep(FIFTEEN_MINUTES);
-      await axios.get("https://v-buddy-bot.herokuapp.com");
+      await axios.get('https://v-buddy-bot.herokuapp.com');
     }
   })();
 
-  client.once("ready", () => {
+  client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}.`);
 
     if (process.env.DYNO) {
       const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
       const date = moment()
-        .tz("America/New_York")
-        .format("M/D/YYYY, h:mm:ss a");
+        .tz('America/New_York')
+        .format('M/D/YYYY, h:mm:ss a');
 
       channel.send(`beep boop BuddyBot updated (${date})`);
     }
   });
 
-  client.on("message", handler(client));
+  client.on('message', handler(client));
 
   client.login(process.env.TOKEN);
 }
 
-require("http")
+require('http')
   .createServer((_, response) => {
-    response.end("Hello :)");
+    response.end('Hello :)');
   })
   .listen(process.env.PORT || 3000);

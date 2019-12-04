@@ -11,17 +11,17 @@ export const mentionUsernames = users =>
   users.map(user => `${mention(user)}\n`);
 
 export const test = (trigger, content) =>
-  new RegExp(`\\b${trigger}\\b`, "i").test(content);
+  new RegExp(`\\b${trigger}\\b`, 'i').test(content);
 
 export const removeFromString = (string, toRemove) =>
-  string.replace(new RegExp(toRemove, "g"), "").trim();
+  string.replace(new RegExp(toRemove, 'g'), '').trim();
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
   for (let i = 0; i < resolverKeys.length; i++) {
     const base = resolverKeys[i];
-    const exact = base.split("|").find(subKey => test(subKey, command));
+    const exact = base.split('|').find(subKey => test(subKey, command));
 
     if (exact) {
       const sub = removeFromString(command, exact);
@@ -30,16 +30,19 @@ export const getResolver = (resolvers, command) => {
   }
 
   return null;
-}
+};
 
-export const getMessageFromResolver = async (resolvers, match, config) => resolvers[match.base](match.sub, config);
+export const getMessageFromResolver = async (resolvers, match, config) =>
+  await resolvers[match.base](match.sub, config);
 
-export const postToJamieReddit = async (title) => {
+export const postToJamieReddit = async title => {
   try {
-    const submission = await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
+    const submission = await reddit
+      .getSubreddit('thingsjamiehassaid')
+      .submitSelfpost({ title });
     const id = submission.name.split('_')[1];
     return `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
   } catch (e) {
     return e.message || 'Something went wrong';
   }
-}
+};

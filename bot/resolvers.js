@@ -20,13 +20,23 @@ export const resolvers = {
   'beep boop': () => `i am a robot`,
   'things jamie has said|thingsjamiehassaid|tjhs': async (command, config) => {
     const resolvers = {
-      add: async title => postToJamieReddit(title)
+      add: title => postToJamieReddit(title),
+      'delete most recent': async () => {
+        console.log('hi');
+        const latestPost = await reddit
+          .getSubreddit('thingsjamiehassaid')
+          .getNew()[0];
+        // console.log({ latestPost });
+        await latestPost.delete();
+
+        return 'post deleted';
+      }
     };
 
     const match = getResolver(resolvers, command);
 
     if (match) {
-      return getMessageFromResolver(resolvers, match, config);
+      return await getMessageFromResolver(resolvers, match, config);
     }
 
     // Default: get random
