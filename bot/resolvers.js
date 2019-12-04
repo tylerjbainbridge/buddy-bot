@@ -7,20 +7,20 @@ import {
   mention,
   getResolver,
   getMessageFromResolver,
-  postToJamieReddit,
+  postToJamieReddit
 } from "./utils";
 
-import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js'
-
+import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from "./config.js";
 
 export const resolvers = {
   "hello|hi": (_, meta) =>
     `hey ${meta.msg.author.username || ""}! im your bot bud`,
+  "freaks me out": () => ":(",
   help: () => `heh just kidding, you gotta find em yourself :)`,
   "beep boop": () => `i am a robot`,
   "things jamie has said|thingsjamiehassaid|tjhs": async (command, config) => {
     const resolvers = {
-      add: async (title) => postToJamieReddit(title),
+      add: async title => postToJamieReddit(title)
     };
 
     const match = getResolver(resolvers, command);
@@ -30,7 +30,9 @@ export const resolvers = {
     }
 
     // Default: get random
-    const submission = reddit.getSubreddit('thingsjamiehassaid').getRandomSubmission();
+    const submission = reddit
+      .getSubreddit("thingsjamiehassaid")
+      .getRandomSubmission();
     return submission.title;
   },
   gif: async command => {
@@ -83,8 +85,8 @@ export const resolvers = {
 
     return `${mention(jam)}, buy cod!`;
   },
-  sandbox: () => 'https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot',
-  repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
+  sandbox: () => "https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot",
+  repo: () => "https://github.com/tylerjbainbridge/buddy-bot",
   cod: (command, meta) => {
     const users = filterOutBots(meta.client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
