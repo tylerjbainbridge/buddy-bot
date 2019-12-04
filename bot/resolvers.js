@@ -78,7 +78,8 @@ export const resolvers = {
     return `${mention(jam)}, buy cod!`;
   },
   sandbox: () =>
-    "https://codesandbox.io/s/tylerjbainbridgebuddy-bot-sz34v?fontsize=14&hidenavigation=1&theme=dark",
+    "https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot",
+    repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
   cod: (command, { client }) => {
     const users = filterOutBots(client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
