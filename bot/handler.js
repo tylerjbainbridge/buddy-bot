@@ -1,5 +1,5 @@
 import { resolvers } from "./resolvers";
-import { test, removeFromString } from "./utils";
+import { getHandler, removeFromString } from "./utils";
 
 const resolverKeys = Object.keys(resolvers);
 
@@ -23,22 +23,10 @@ export const handler = client => async msg => {
       .map(key => `\`${key}\``)
       .join("\n")}`;
   } else {
-    let handler;
-
-    for (let i = 0; i < resolverKeys.length; i++) {
-      const base = resolverKeys[i];
-      const exact = base.split("|").find(subKey => test(subKey, command));
-
-      if (exact) {
-        handler = { base, exact };
-        break;
-      }
-    }
+    const handler = getHandler(resolvers, command);
 
     if (handler) {
-      const subCommand = removeFromString(command, handler.exact);
-
-      responseMessage = await resolvers[handler.base](subCommand, {
+      responseMessage = await resolvers[handler.base](handler.sub, {
         msg,
         client,
         trigger

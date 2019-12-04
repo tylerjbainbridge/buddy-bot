@@ -1,31 +1,40 @@
 import axios from "axios";
 import _ from "lodash";
+import snoowrap from 'snoowrap';
 import {
   mentionUsernames,
   filterOutBots,
   findByUsername,
   mention,
-  removeFromString
+  removeFromString,
+  getHandler,
 } from "./utils";
 
-const weatherAppID = "70da43007f50c4366fbb4685ffe5ef67";
-const BUDS_WITHOUT_COD = ["jam"];
+import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js'
+
 
 export const resolvers = {
-  "hello|hi": (_, { msg }) =>
-    `hey ${msg.author.username || ""}! im your bot bud`,
+  "hello|hi": (_, meta) =>
+    `hey ${meta.msg.author.username || ""}! im your bot bud`,
   help: () => `heh just kidding, you gotta find em yourself :)`,
   "beep boop": () => `i am a robot`,
-  "things jamie has said|thingsjamiehassaid|tjhs": async () => {
-    const { data } = await axios.get(
-      "http://api.reddit.com/r/thingsjamiehassaid"
-    );
+  "things jamie has said|thingsjamiehassaid|tjhs": async (command, config) => {
+    const resolvers = {
+      add: async (title) => {
+        await reddit.getSubreddit('thingsjamiehassaid').submitSelfpost({ title });
+        return 'posted!';
+      }
+    };
 
-    const { children } = data.data;
+    const handler = getHandler(resolvers, command);
 
-    const index = Math.floor(Math.random() * children.length);
+    if (handler) {
+      return resolvers[handler.base](handler.sub);
+    }
 
-    return children[index].data.title;
+    // Get random
+    const submission = reddit.getSubreddit('thingsjamiehassaid').getRandomSubmission();
+    return submission.title;
   },
   gif: async command => {
     const {
@@ -55,7 +64,7 @@ export const resolvers = {
   },
   "weather in": async command => {
     const { data: weatherData } = await axios.get(
-      `http://api.openweathermap.org/data/2.5/weather?appid=${weatherAppID}&q=${command}`
+      `http://api.openweathermap.org/data/2.5/weather?appid=${WEATHER_APP_ID}&q=${command}`
     );
 
     if (!weatherData) return "no weather found :(";
@@ -79,19 +88,19 @@ export const resolvers = {
   },
   sandbox: () => 'https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot',
   repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
-  cod: (command, { client }) => {
-    const users = filterOutBots(client.users).filter(
+  cod: (command, meta) => {
+    const users = filterOutBots(meta.client.users).filter(
       ({ username }) => !BUDS_WITHOUT_COD.includes(username)
     );
 
-    const jam = findByUsername(client.users, "jam");
+    const jam = findByUsername(meta.client.users, "jam");
 
     return `let's play cod ${command || "now"}\n${mentionUsernames(
       users
     )}\n${mention(jam)} pls play with us :(`;
   },
-  "boy din": (_, { client }) => {
-    const buds = filterOutBots(client.users);
+  "boy din": (_, meta) => {
+    const buds = filterOutBots(meta.client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
   }
 };
