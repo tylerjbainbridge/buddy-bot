@@ -60,9 +60,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
       headers: { "Content-Type": "audio/mpeg3" },
     });
 
-    const decoder = new lame.Decoder();
-
-    data.pipe(decoder);
+    const decoder = data.pipe(new lame.Decoder());
 
     const dispatcher = connection.playStream(decoder);
 
