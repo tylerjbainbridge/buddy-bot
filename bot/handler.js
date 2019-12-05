@@ -50,14 +50,15 @@ export const handler = client => async msg => {
             trigger,
           });
         }
-      }
 
-      if (responseMessage) {
-        await msg.react("😃");
-        await msg.channel.send(responseMessage);
-      } else {
         await msg.react("🤔");
         await msg.channel.send("command not recognized :(");
+      }
+
+      await msg.react("😃");
+
+      if (responseMessage) {
+        await msg.channel.send(responseMessage);
       }
     }
   } catch (e) {
