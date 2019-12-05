@@ -135,6 +135,8 @@ export const resolvers = {
     }
 
     const url = await client.sounds.create({ text, voice: "en-US" });
+    
+    console.log(url)
 
     await playStreamFromUrl(voiceChannel, url);
   },

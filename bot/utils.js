@@ -27,7 +27,7 @@ export const getResolver = (resolvers, command) => {
 
     if (exact) {
       const sub = removeFromString(command, exact);
-      console.log("match", exact);
+      console.log("match", { exact, sub });
       return { base, exact, sub };
     }
   }
