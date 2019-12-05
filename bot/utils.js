@@ -70,7 +70,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
 
 export const getTextToSpeechStream = text =>
   new Promise((resolve, reject) => {
-    Polly.synthesizeSpeech(
+    polly.synthesizeSpeech(
       {
         Text: text,
         OutputFormat: 'mp3',
