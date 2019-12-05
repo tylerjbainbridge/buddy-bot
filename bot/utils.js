@@ -64,7 +64,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
 
     data.pipe(encoder);
 
-    const dispatcher = connection.playArbitraryInput(data);
+    const dispatcher = connection.playStream(data);
 
     dispatcher.on("end", resolve);
     dispatcher.on("error", reject);
