@@ -115,7 +115,7 @@ export const resolvers = {
     const buds = filterOutBots(meta.client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
   },
-  play: async (command, meta) => {
+  play: async (fileName, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
     if (!voiceChannel) {
@@ -124,7 +124,7 @@ export const resolvers = {
 
     await playStreamFromUrl(
       voiceChannel,
-      `https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`
+      `https://v-buddy-bot.s3.amazonaws.com/${fileName}.mp3`
     );
   },
   say: async (text, meta) => {
