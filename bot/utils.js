@@ -66,7 +66,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     // Write your buffer
     fileStream.end(data);
 
-    const dispatcher = connection.playStream(data);
+    const dispatcher = connection.playStream(fileStream);
 
     dispatcher.on("end", resolve);
     dispatcher.on("error", reject);
