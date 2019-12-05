@@ -1,7 +1,14 @@
 import snoowrap from 'snoowrap';
+import AWS from 'aws-sdk';
+
 import { Say } from 'say';
 
 export const say = new Say('darwin');
+
+export const polly = new AWS.Polly({
+  signatureVersion: 'v4',
+  region: 'us-east-1'
+});
 
 export const reddit = new snoowrap({
   userAgent: 'official_jamie_bot 1.0',

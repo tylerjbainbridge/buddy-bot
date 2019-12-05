@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 
-import { reddit, say } from './config';
+import { reddit, polly } from './config';
 
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
@@ -68,31 +68,24 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     dispatcher.on('error', reject);
   });
 
-export const exportTextToSpeechToFile = text =>
+export const getTextToSpeechStream = text =>
   new Promise((resolve, reject) => {
-    const id =
-      Math.random()
-        .toString(36)
-        .substring(2, 15) +
-      Math.random()
-        .toString(36)
-        .substring(2, 15);
-
-    const fileName = `${id}.wav`;
-
-    say.export(text, 'Cellos', 0.75, fileName, err =>
-      err ? reject() : resolve(fileName)
+    Polly.synthesizeSpeech(
+      {
+        Text: text,
+        OutputFormat: 'mp3',
+        VoiceId: 'Joanna'
+      },
+      (err, data) => (err ? reject(err) : resolve(data))
     );
   });
 
 export const tts = async (voiceChannel, text) => {
   const connection = await voiceChannel.join().catch(err => console.log(err));
 
-  const fileName = await exportTextToSpeechToFile(text);
+  const data = await getTextToSpeechStream(text);
 
-  const data = fs.createReadStream(fileName);
-
-  const dispatcher = connection.playStream(data);
+  const dispatcher = connection.playStream(data.AudioStream);
 
   dispatcher.on('end', resolve);
   dispatcher.on('error', reject);
