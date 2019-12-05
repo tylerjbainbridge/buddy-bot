@@ -43,6 +43,7 @@ export const handler = client => async msg => {
         const match = getResolver(resolvers, command);
 
         if (match) {
+          await msg.react("😃");
           responseMessage = await getMessageFromResolver(resolvers, match, {
             msg,
             client,
@@ -54,7 +55,6 @@ export const handler = client => async msg => {
         }
       }
 
-      await msg.react("😃");
 
       if (responseMessage) {
         await msg.channel.send(responseMessage);

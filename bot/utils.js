@@ -27,7 +27,7 @@ export const getResolver = (resolvers, command) => {
 
     if (exact) {
       const sub = removeFromString(command, exact);
-      console.log('match', exact);
+      console.log("match", exact);
       return { base, exact, sub };
     }
   }
@@ -54,7 +54,10 @@ export const playStreamFromUrl = (voiceChannel, url) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const { data } = await axios.get(url, { responseType: "stream" });
+    const { data } = await axios.get(url, {
+      responseType: "stream",
+      headers: { "Content-Type": "audio/mpeg3" },
+    });
 
     const dispatcher = connection.playStream(data);
 
