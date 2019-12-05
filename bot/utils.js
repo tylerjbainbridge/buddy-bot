@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Readable } from 'stream';
 
 import { reddit } from "./config";
 
@@ -55,11 +54,10 @@ export const playStreamFromUrl = (voiceChannel, url) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const { data } = await axios.get(url, { responseType: "arraybuffer" });
-
-    const stream = new Readable();
-    stream.push(data);
-    stream.push(null);
+    const { data } = await axios.get(url, {
+      responseType: "stream",
+      headers: { "content-Type": "audio/mpeg" },
+    });
 
     const dispatcher = connection.playStream(data);
 
