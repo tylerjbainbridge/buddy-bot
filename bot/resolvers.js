@@ -115,7 +115,9 @@ export const resolvers = {
   corner: async (command, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
-    await voiceChannel.join().catch(err => console.log(err));
+    if (!voiceChannel) return 'theres no one in the voice channel';
+
+    const connection = await voiceChannel.join().catch(err => console.log(err));
 
     const dispatcher = connection.playFile('./corner.mp3');
 
@@ -123,6 +125,6 @@ export const resolvers = {
 
     voiceChannel.leave();
 
-    return 'im talking';
+    return 'done';
   }
 };
