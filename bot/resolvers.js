@@ -115,7 +115,7 @@ export const resolvers = {
   play: async (command, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
-    if (!voiceChannel) return 'theres no one in the voice channel';
+    if (!voiceChannel) return 'you need to be in a voice channel for this to work';
 
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
