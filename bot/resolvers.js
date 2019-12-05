@@ -1,6 +1,8 @@
 import axios from "axios";
 import _ from "lodash";
 import googleTTS from "google-tts-api";
+import client from "soundoftext-js";
+
 import {
   mentionUsernames,
   filterOutBots,
@@ -126,14 +128,15 @@ export const resolvers = {
       `https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`
     );
   },
-  say: async (command, meta) => {
+  say: async (text, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
     if (!voiceChannel) {
       return "you need to be in a voice channel for this to work";
     }
 
-    const url = await googleTTS(command, "en", 1);
+    const url = await client.sounds.create({ text, voice: "en-US" });
+
     await playStreamFromUrl(voiceChannel, url);
   },
 };
