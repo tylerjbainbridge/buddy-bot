@@ -112,14 +112,14 @@ export const resolvers = {
     const buds = filterOutBots(meta.client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
   },
-  corner: async (command, meta) => {
+  play: async (command, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
     if (!voiceChannel) return 'theres no one in the voice channel';
 
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const dispatcher = connection.playFile('./corner.mp3');
+    const dispatcher = connection.play(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
 
     dispatcher.on('end', () => {
       voiceChannel.leave();

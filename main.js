@@ -10,8 +10,6 @@ process.on('unhandledRejection', reason => {
 
 const FIFTEEN_MINUTES = 900000;
 
-console.log('Booting up!');
-
 // Test
 // (async () => {
 //   await handler()({
