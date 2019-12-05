@@ -111,5 +111,18 @@ export const resolvers = {
   'boy din': (_, meta) => {
     const buds = filterOutBots(meta.client.users);
     return `boy din?\n${mentionUsernames(buds)}`;
+  },
+  corner: async (command, meta) => {
+    const voiceChannel = meta.msg.member.voiceChannel;
+
+    await voiceChannel.join().catch(err => console.log(err));
+
+    const dispatcher = connection.playFile('./corner.mp3');
+
+    dispatcher.on('end', end => {});
+
+    voiceChannel.leave();
+
+    return 'im talking';
   }
 };

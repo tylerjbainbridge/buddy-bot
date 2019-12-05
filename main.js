@@ -33,7 +33,7 @@ export const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
 export const client = new Discord.Client();
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.TOKEN) {
   (async () => {
     while (true) {
       // Ping the heroku app every fifteen minutes to keep it from sleeping
