@@ -55,12 +55,6 @@ export const playStreamFromUrl = (voiceChannel, url) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const { data } = await axios({
-      url,
-      method: 'GET',
-      headers: { "content-type": "audio/mpeg" },
-    });
-
     const { data } = await axios.get(url, { responseType: "arraybuffer" });
 
     const stream = new Readable();
