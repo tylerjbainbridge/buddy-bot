@@ -1,5 +1,6 @@
 import axios from "axios";
 import _ from "lodash";
+import googleTTS from 'google-tts-api';
 import {
   mentionUsernames,
   filterOutBots,
@@ -10,6 +11,7 @@ import {
   postToJamieReddit,
   playStreamFromUrl,
 } from "./utils";
+
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from "./config.js";
 
@@ -120,6 +122,16 @@ export const resolvers = {
       return "you need to be in a voice channel for this to work";
     }
 
-    await playStreamFromUrl(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
+    await playStreamFromUrl(voiceChannel, `https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
   },
+  say: (command, meta) => {
+    const voiceChannel = meta.msg.member.voiceChannel;
+
+    if (!voiceChannel) {
+      return "you need to be in a voice channel for this to work";
+    }
+
+    const url = await googleTTS(command, 'en', 1);
+    await playStreamFromUrl(voiceChannel, url);
+  } 
 };
