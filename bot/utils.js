@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Readable } from 'stream';
 
 import { reddit } from "./config";
 
@@ -57,9 +58,14 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     const { data } = await axios({
       url,
       method: 'GET',
-      responseType: "stream",
       headers: { "content-type": "audio/mpeg" },
     });
+
+    const { data } = await axios.get(url, { responseType: "arraybuffer" });
+
+    const stream = new Readable();
+    stream.push(data);
+    stream.push(null);
 
     const dispatcher = connection.playStream(data);
 
