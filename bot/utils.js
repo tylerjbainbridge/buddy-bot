@@ -47,7 +47,7 @@ export const postToJamieReddit = async title => {
   }
 };
 
-export const playStreamFromUrl = (voiceChannel, url) => new Promise((resolve) => {
+export const playStreamFromUrl = (voiceChannel, url) => new Promise(async (resolve) => {
   const connection = await voiceChannel.join().catch(err => console.log(err));
 
   const { data } = await axios.get(url,{ responseType: "stream" });
