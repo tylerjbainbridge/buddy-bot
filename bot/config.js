@@ -1,5 +1,5 @@
 import snoowrap from 'snoowrap';
-import Say from 'say';
+import { Say } from 'say';
 
 export const say = new Say('darwin');
 
