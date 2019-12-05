@@ -62,10 +62,12 @@ export const playStreamFromUrl = (voiceChannel, url) =>
 
     const decoder = new lame.Decoder();
 
-    decoder.pipe(speaker);
     data.pipe(decoder);
 
     const dispatcher = connection.playArbitraryInput(decoder);
+
+    console.log('trying again');
+    connection.playArbitraryInput(data);
 
     dispatcher.on("end", resolve);
     dispatcher.on("error", reject);
