@@ -55,8 +55,9 @@ if (process.env.NODE_ENV === "production") {
       channel.send(`beep boop BuddyBot updated (${date})`);
 
       // Log when the script is shutting down.
-      process.on("exit", function() {
+      process.on("SIGTERM", function() {
         channel.send(`BuddyBot offline (updating)`);
+        process.exit(0);
       });
     }
   });
