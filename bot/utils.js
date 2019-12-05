@@ -1,7 +1,7 @@
-import axios from "axios";
-import stream from "stream";
+import axios from 'axios';
+import stream from 'stream';
 
-import { reddit } from "./config";
+import { reddit } from './config';
 
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
@@ -14,21 +14,21 @@ export const mentionUsernames = users =>
   users.map(user => `${mention(user)}\n`);
 
 export const test = (trigger, content) =>
-  new RegExp(`\\b${trigger}\\b`, "i").test(content);
+  new RegExp(`\\b${trigger}\\b`, 'i').test(content);
 
 export const removeFromString = (string, toRemove) =>
-  string.replace(new RegExp(toRemove, "i"), "").trim();
+  string.replace(new RegExp(toRemove, 'i'), '').trim();
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
   for (let i = 0; i < resolverKeys.length; i++) {
     const base = resolverKeys[i];
-    const exact = base.split("|").find(subKey => command.startsWith(subKey));
+    const exact = base.split('|').find(subKey => command.startsWith(subKey));
 
     if (exact) {
       const sub = removeFromString(command, exact);
-      console.log("match", { exact, sub });
+      console.log('match', { exact, sub });
       return { base, exact, sub };
     }
   }
@@ -42,12 +42,12 @@ export const getMessageFromResolver = async (resolvers, match, config) =>
 export const postToJamieReddit = async title => {
   try {
     const submission = await reddit
-      .getSubreddit("thingsjamiehassaid")
+      .getSubreddit('thingsjamiehassaid')
       .submitSelfpost({ title });
 
     return submission.url;
   } catch (e) {
-    return e.message || "Something went wrong";
+    return e.message || 'Something went wrong';
   }
 };
 
@@ -56,18 +56,12 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
     const { data } = await axios.get(url, {
-      responseType: "arraybuffer",
-      headers: { "content-type": "audio/mpeg", accept: "audio/mpeg" },
+      responseType: 'stream',
+      headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
     });
 
-    // Initiate the source
-    var fileStream = new stream.PassThrough();
+    const dispatcher = connection.playStream(data);
 
-    // Write your buffer
-    fileStream.end(data);
-
-    const dispatcher = connection.playStream(fileStream);
-
-    dispatcher.on("end", resolve);
-    dispatcher.on("error", reject);
+    dispatcher.on('end', resolve);
+    dispatcher.on('error', reject);
   });
