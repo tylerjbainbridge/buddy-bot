@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { reddit } from './config';
 
 export const findByUsername = (users, username) =>
