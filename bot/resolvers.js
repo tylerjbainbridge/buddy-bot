@@ -119,7 +119,7 @@ export const resolvers = {
 
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const dispatcher = connection.play(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
+    const dispatcher = connection.playArbitraryInput(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
 
     dispatcher.on('end', () => {
       voiceChannel.leave();
