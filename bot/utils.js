@@ -1,5 +1,5 @@
 import axios from "axios";
-import lame from "lame";
+import axios from "axios";
 
 import { reddit } from "./config";
 
@@ -60,14 +60,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
       headers: { "Content-Type": "audio/mpeg3" },
     });
 
-    const decoder = new lame.Decoder({
-      mp3Input: true,
-      signed: true,
-    });
-
-    data.pipe(decoder);
-
-    const dispatcher = connection.playConvertedStream(decoder);
+    const dispatcher = connection.playStream(data);
 
     dispatcher.on("end", resolve);
     dispatcher.on("error", reject);
