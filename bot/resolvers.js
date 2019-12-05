@@ -124,7 +124,7 @@ export const resolvers = {
 
     await playStreamFromUrl(voiceChannel, `https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
   },
-  say: (command, meta) => {
+  say: async (command, meta) => {
     const voiceChannel = meta.msg.member.voiceChannel;
 
     if (!voiceChannel) {
