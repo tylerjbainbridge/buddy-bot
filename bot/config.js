@@ -1,6 +1,13 @@
 import snoowrap from 'snoowrap';
 import AWS from 'aws-sdk';
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
+});
+
+AWS.config.region = 'us-east-1';
+
 export const polly = new AWS.Polly({
   signatureVersion: 'v4',
   region: 'us-east-1'
