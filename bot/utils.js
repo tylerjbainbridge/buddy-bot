@@ -1,5 +1,5 @@
 import axios from 'axios';
-import fs from 'fs';
+import stream from 'stream';
 
 import { reddit, polly } from './config';
 
@@ -85,7 +85,14 @@ export const tts = async (voiceChannel, text) => {
 
   const data = await getTextToSpeechStream(text);
 
-  const dispatcher = connection.playStream(data.AudioStream);
+  // Initiate the source
+  const bufferStream = new stream.PassThrough();
+  // convert AudioStream into a readable stream
+  bufferStream.end(data.AudioStream);
+  // Pipe into Player
+  bufferStream.pipe(Player);
+
+  const dispatcher = connection.playStream(bufferStream);
 
   dispatcher.on('end', resolve);
   dispatcher.on('error', reject);
