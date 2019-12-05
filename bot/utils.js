@@ -62,7 +62,6 @@ export const playStreamFromUrl = (voiceChannel, url) =>
 
     const decoder = new lame.Decoder();
 
-    decoder.pipe(speaker);
     data.pipe(decoder);
 
     const dispatcher = connection.playConvertedStream(decoder);
