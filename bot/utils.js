@@ -54,7 +54,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const { data } = await axios.get({
+    const { data } = await axios({
       url,
       method: 'GET',
       responseType: "stream",
