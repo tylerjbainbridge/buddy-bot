@@ -14,7 +14,7 @@ export const test = (trigger, content) =>
   new RegExp(`\\b${trigger}\\b`, 'i').test(content);
 
 export const removeFromString = (string, toRemove) =>
-  string.replace(new RegExp(toRemove, 'g'), '').trim();
+  string.replace(new RegExp(toRemove, 'gi'), '').trim();
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
