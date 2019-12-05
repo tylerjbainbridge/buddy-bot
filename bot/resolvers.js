@@ -118,8 +118,12 @@ export const resolvers = {
     if (!voiceChannel) return 'you need to be in a voice channel for this to work';
 
     const connection = await voiceChannel.join().catch(err => console.log(err));
+  
+    const { data } = await axios.get(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`, {
+      responseType: 'stream',
+    });
 
-    const dispatcher = connection.playArbitraryInput(`https://v-buddy-bot.s3.amazonaws.com/${command}.mp3`);
+    const dispatcher = connection.playStream(data);
 
     dispatcher.on('end', () => {
       voiceChannel.leave();
