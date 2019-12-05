@@ -28,7 +28,7 @@ export const handler = client => async msg => {
     if (trigger) {
       const command = removeFromString(msg.content, trigger);
 
-      let responseMessage = "command not recognized :(";
+      let responseMessage = "";
 
       // Help menu
       if (msg.content.includes("triggers")) {
