@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-import { reddit } from './config';
+import { reddit } from "./config";
 
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
@@ -13,20 +13,21 @@ export const mentionUsernames = users =>
   users.map(user => `${mention(user)}\n`);
 
 export const test = (trigger, content) =>
-  new RegExp(`\\b${trigger}\\b`, 'i').test(content);
+  new RegExp(`\\b${trigger}\\b`, "i").test(content);
 
 export const removeFromString = (string, toRemove) =>
-  string.replace(new RegExp(toRemove, 'i'), '').trim();
+  string.replace(new RegExp(toRemove, "i"), "").trim();
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
   for (let i = 0; i < resolverKeys.length; i++) {
     const base = resolverKeys[i];
-    const exact = base.split('|').find(subKey => command.startsWith(subKey));
+    const exact = base.split("|").find(subKey => command.startsWith(subKey));
 
     if (exact) {
       const sub = removeFromString(command, exact);
+      console.log('match', exact);
       return { base, exact, sub };
     }
   }
@@ -40,22 +41,23 @@ export const getMessageFromResolver = async (resolvers, match, config) =>
 export const postToJamieReddit = async title => {
   try {
     const submission = await reddit
-      .getSubreddit('thingsjamiehassaid')
+      .getSubreddit("thingsjamiehassaid")
       .submitSelfpost({ title });
 
     return submission.url;
   } catch (e) {
-    return e.message || 'Something went wrong';
+    return e.message || "Something went wrong";
   }
 };
 
-export const playStreamFromUrl = (voiceChannel, url) => new Promise(async (resolve, reject) => {
-  const connection = await voiceChannel.join().catch(err => console.log(err));
+export const playStreamFromUrl = (voiceChannel, url) =>
+  new Promise(async (resolve, reject) => {
+    const connection = await voiceChannel.join().catch(err => console.log(err));
 
-  const { data } = await axios.get(url,{ responseType: "stream" });
+    const { data } = await axios.get(url, { responseType: "stream" });
 
-  const dispatcher = connection.playStream(data);
+    const dispatcher = connection.playStream(data);
 
-  dispatcher.on("end", resolve);
-  dispatcher.on("error", reject);
-});
+    dispatcher.on("end", resolve);
+    dispatcher.on("error", reject);
+  });

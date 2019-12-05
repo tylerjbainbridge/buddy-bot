@@ -43,16 +43,15 @@ export const handler = client => async msg => {
         const match = getResolver(resolvers, command);
 
         if (match) {
-          console.log(`command: ${match.base}`);
           responseMessage = await getMessageFromResolver(resolvers, match, {
             msg,
             client,
             trigger,
           });
+        } else {
+          await msg.react("🤔");
+          await msg.channel.send("command not recognized :(");
         }
-
-        await msg.react("🤔");
-        await msg.channel.send("command not recognized :(");
       }
 
       await msg.react("😃");
