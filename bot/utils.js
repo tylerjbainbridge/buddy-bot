@@ -16,14 +16,14 @@ export const test = (trigger, content) =>
   new RegExp(`\\b${trigger}\\b`, 'i').test(content);
 
 export const removeFromString = (string, toRemove) =>
-  string.replace(new RegExp(toRemove, 'gi'), '').trim();
+  string.replace(new RegExp(toRemove, 'i'), '').trim();
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
   for (let i = 0; i < resolverKeys.length; i++) {
     const base = resolverKeys[i];
-    const exact = base.split('|').find(subKey => test(subKey, command));
+    const exact = base.split('|').find(subKey => command.startsWith(subKey));
 
     if (exact) {
       const sub = removeFromString(command, exact);
