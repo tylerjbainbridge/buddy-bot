@@ -121,10 +121,10 @@ export const resolvers = {
 
     const dispatcher = connection.playFile('./corner.mp3');
 
-    dispatcher.on('end', end => {});
+    dispatcher.on('end', () => {
+      voiceChannel.leave();
+    });
 
-    voiceChannel.leave();
-
-    return 'done';
+    return 'lol';
   }
 };
