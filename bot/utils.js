@@ -67,7 +67,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
 
     data.pipe(decoder);
 
-    const dispatcher = connection.playConvertedStream(data);
+    const dispatcher = connection.playConvertedStream(decoder);
 
     dispatcher.on("end", resolve);
     dispatcher.on("error", reject);
