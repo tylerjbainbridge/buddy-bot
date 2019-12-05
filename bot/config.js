@@ -1,4 +1,7 @@
 import snoowrap from 'snoowrap';
+import Say from 'say';
+
+export const say = new Say('darwin');
 
 export const reddit = new snoowrap({
   userAgent: 'official_jamie_bot 1.0',

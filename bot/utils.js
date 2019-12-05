@@ -1,7 +1,7 @@
 import axios from 'axios';
-import stream from 'stream';
+import fs from 'fs';
 
-import { reddit } from './config';
+import { reddit, say } from './config';
 
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
@@ -67,3 +67,33 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
   });
+
+export const exportTextToSpeechToFile = text =>
+  new Promise((resolve, reject) => {
+    const id =
+      Math.random()
+        .toString(36)
+        .substring(2, 15) +
+      Math.random()
+        .toString(36)
+        .substring(2, 15);
+
+    const fileName = `${id}.wav`;
+
+    say.export(text, 'Cellos', 0.75, fileName, err =>
+      err ? reject() : resolve(fileName)
+    );
+  });
+
+export const tts = async (voiceChannel, text) => {
+  const connection = await voiceChannel.join().catch(err => console.log(err));
+
+  const fileName = await exportTextToSpeechToFile(text);
+
+  const data = fs.createReadStream(fileName);
+
+  const dispatcher = connection.playStream(data);
+
+  dispatcher.on('end', resolve);
+  dispatcher.on('error', reject);
+};

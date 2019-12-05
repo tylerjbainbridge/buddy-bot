@@ -10,7 +10,8 @@ import {
   getResolver,
   getMessageFromResolver,
   postToJamieReddit,
-  playStreamFromUrl
+  playStreamFromUrl,
+  tts
 } from './utils';
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js';
@@ -136,11 +137,13 @@ export const resolvers = {
       return 'you need to be in a voice channel for this to work';
     }
 
-    const url = await client.sounds.create({ text, voice: 'en-US' });
+    await tts(voiceChannel, text);
 
-    console.log(url);
+    // const url = await client.sounds.create({ text, voice: 'en-US' });
 
-    await playStreamFromUrl(voiceChannel, url);
+    // console.log(url);
+
+    // await playStreamFromUrl(voiceChannel, url);
 
     voiceChannel.leave();
   }
