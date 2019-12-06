@@ -55,12 +55,12 @@ export const playStreamFromUrl = (voiceChannel, url) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const { data } = await axios.get(url, {
+    const { data: stream } = await axios.get(url, {
       responseType: 'stream',
       headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
     });
 
-    const dispatcher = connection.playStream(data);
+    const dispatcher = connection.playStream(stream);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
@@ -78,14 +78,14 @@ export const tts = async (voiceChannel, text) =>
       })
       .promise();
 
-    const data = new streamBuffers.ReadableStreamBuffer({
+    const stream = new streamBuffers.ReadableStreamBuffer({
       frequency: 10, // in milliseconds.
       chunkSize: 2048 // in bytes.
     });
 
-    data.put(data.AudioStream);
+    stream.put(data.AudioStream);
 
-    const dispatcher = connection.playStream(data);
+    const dispatcher = connection.playStream(stream);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
