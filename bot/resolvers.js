@@ -137,7 +137,11 @@ export const resolvers = {
       return 'you need to be in a voice channel for this to work';
     }
 
-    await tts(voiceChannel, text);
+    try {
+      await tts(voiceChannel, text);
+    } catch (e) {
+      return e.message || 'i broke :/';
+    }
 
     // const url = await client.sounds.create({ text, voice: 'en-US' });
 
