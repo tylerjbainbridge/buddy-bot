@@ -116,11 +116,8 @@ export const tts = async (voiceChannel, text) =>
 
     const stream = fs.createReadStream(filename);
 
-    // convert AudioStream into a readable stream
-    pcmStream.end(pcm.AudioStream);
+    const dispatchers = connection.playStream(stream);
 
-    const pcmDismatcher = connection.playStream(stream);
-
-    pcmDismatcher.on('end', resolve);
-    pcmDismatcher.on('error', reject);
+    dispatchers.on('end', resolve);
+    dispatchers.on('error', reject);
   });
