@@ -72,26 +72,26 @@ export const tts = async (voiceChannel, text) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const data = await polly
-      .synthesizeSpeech({
-        Text: text,
-        OutputFormat: 'mp3',
-        VoiceId: 'Joanna'
-      })
-      .promise();
+    // const data = await polly
+    //   .synthesizeSpeech({
+    //     Text: text,
+    //     OutputFormat: 'mp3',
+    //     VoiceId: 'Joanna'
+    //   })
+    //   .promise();
 
-    // Initiate the source
-    var bufferStream = new stream.PassThrough();
+    // // Initiate the source
+    // var bufferStream = new stream.PassThrough();
 
-    // convert AudioStream into a readable stream
-    bufferStream.end(data.AudioStream);
+    // // convert AudioStream into a readable stream
+    // bufferStream.end(data.AudioStream);
 
-    const dispatcher = connection.playStream(stream);
+    // const dispatcher = connection.playStream(stream);
 
-    dispatcher.on('end', resolve);
-    dispatcher.on('error', reject);
-    console.log('playStream');
-    await sleep(500);
+    // dispatcher.on('end', resolve);
+    // dispatcher.on('error', reject);
+    // console.log('playStream');
+    // await sleep(500);
 
     const pcm = await polly
       .synthesizeSpeech({
