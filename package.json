@@ -22,7 +22,7 @@
     "ytdl-core": "^1.0.3"
   },
   "engines": {
-    "node": "12"
+    "node": "11"
   },
   "template": "node"
 }
