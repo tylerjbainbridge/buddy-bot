@@ -94,6 +94,8 @@ export const tts = async (voiceChannel, text) =>
     // console.log('playStream');
     // await sleep(500);
 
+    console.log({ text });
+
     const data = await polly
       .synthesizeSpeech({
         Text: text,
