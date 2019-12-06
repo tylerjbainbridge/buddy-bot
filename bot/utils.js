@@ -87,11 +87,11 @@ export const tts = async (voiceChannel, text) =>
     const data = await getTextToSpeechStream(text);
 
     // Initiate the source
-    const bufferStream = new stream.PassThrough();
+    // const bufferStream = new stream.PassThrough();
     // convert AudioStream into a readable stream
-    bufferStream.end(data.AudioStream);
+    // bufferStream.end(data.AudioStream);
 
-    const dispatcher = connection.playStream(bufferStream);
+    const dispatcher = connection.playStream(data.AudioStream);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
