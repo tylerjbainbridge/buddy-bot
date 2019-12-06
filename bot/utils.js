@@ -1,7 +1,9 @@
 import axios from 'axios';
-import streamBuffers from 'stream-buffers';
+import stream from 'stream';
 
 import { reddit, polly } from './config';
+
+export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const findByUsername = (users, username) =>
   users.find(user => user.username === username);
@@ -78,14 +80,33 @@ export const tts = async (voiceChannel, text) =>
       })
       .promise();
 
-    const stream = new streamBuffers.ReadableStreamBuffer({
-      frequency: 10, // in milliseconds.
-      chunkSize: 2048 // in bytes.
-    });
+    // Initiate the source
+    var bufferStream = new stream.PassThrough();
 
-    stream.put(data.AudioStream);
+    // convert AudioStream into a readable stream
+    bufferStream.end(data.AudioStream);
 
     const dispatcher = connection.playStream(stream);
+    console.log('playStream');
+    await sleep(500);
+
+    const pcm = await polly
+      .synthesizeSpeech({
+        Text: text,
+        OutputFormat: 'pcm',
+        VoiceId: 'Joanna'
+      })
+      .promise();
+
+    // Initiate the source
+    var pcmStream = new stream.PassThrough();
+
+    // convert AudioStream into a readable stream
+    pcmStream.end(pcm.AudioStream);
+
+    const dispatcher = connection.playConvertedStream(pcmStream);
+    console.log('pcmStream');
+    await sleep(500);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
