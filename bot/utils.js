@@ -80,18 +80,19 @@ export const getTextToSpeechStream = text =>
     );
   });
 
-export const tts = async (voiceChannel, text) => {
-  const connection = await voiceChannel.join().catch(err => console.log(err));
+export const tts = async (voiceChannel, text) =>
+  new Promise(async (resolve, reject) => {
+    const connection = await voiceChannel.join().catch(err => console.log(err));
 
-  const data = await getTextToSpeechStream(text);
+    const data = await getTextToSpeechStream(text);
 
-  // Initiate the source
-  const bufferStream = new stream.PassThrough();
-  // convert AudioStream into a readable stream
-  bufferStream.end(data.AudioStream);
+    // Initiate the source
+    const bufferStream = new stream.PassThrough();
+    // convert AudioStream into a readable stream
+    bufferStream.end(data.AudioStream);
 
-  const dispatcher = connection.playStream(bufferStream);
+    const dispatcher = connection.playStream(bufferStream);
 
-  dispatcher.on('end', resolve);
-  dispatcher.on('error', reject);
-};
+    dispatcher.on('end', resolve);
+    dispatcher.on('error', reject);
+  });
