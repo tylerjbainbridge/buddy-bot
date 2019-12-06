@@ -1,7 +1,7 @@
 import snoowrap from 'snoowrap';
 import AWS from 'aws-sdk';
 
-AWS.config = new aws.Config();
+AWS.config = new AWS.Config();
 AWS.config.accessKeyId = process.env.AWS_S3_ACCESS_KEY;
 AWS.config.secretAccessKey = process.env.AWS_S3_SECRET_ACCESS_KEY;
 
