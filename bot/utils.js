@@ -1,5 +1,5 @@
 import axios from 'axios';
-import stream from 'stream';
+import streamBuffers from 'stream-buffers';
 
 import { reddit, polly } from './config';
 
@@ -78,7 +78,14 @@ export const tts = async (voiceChannel, text) =>
       })
       .promise();
 
-    const dispatcher = connection.playArbitraryInput(data);
+    const data = new streamBuffers.ReadableStreamBuffer({
+      frequency: 10, // in milliseconds.
+      chunkSize: 2048 // in bytes.
+    });
+
+    data.put(data.AudioStream);
+
+    const dispatcher = connection.playStream(data);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
