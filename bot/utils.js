@@ -66,30 +66,19 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     dispatcher.on('error', reject);
   });
 
-export const getTextToSpeechStream = text =>
-  new Promise((resolve, reject) => {
-    polly.synthesizeSpeech(
-      {
-        Text: text,
-        OutputFormat: 'mp3',
-        VoiceId: 'Joanna'
-      },
-      (err, data) => (err ? reject(err) : resolve(data))
-    );
-  });
-
 export const tts = async (voiceChannel, text) =>
   new Promise(async (resolve, reject) => {
     const connection = await voiceChannel.join().catch(err => console.log(err));
 
-    const data = await getTextToSpeechStream(text);
+    const data = await polly
+      .synthesizeSpeech({
+        Text: text,
+        OutputFormat: 'mp3',
+        VoiceId: 'Joanna'
+      })
+      .promise();
 
-    // Initiate the source
-    const bufferStream = new stream.PassThrough();
-    // convert AudioStream into a readable stream
-    bufferStream.end(data.AudioStream);
-
-    const dispatcher = connection.playStream(data.AudioStream);
+    const dispatcher = connection.playArbitraryInput(data.AudioStream);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
