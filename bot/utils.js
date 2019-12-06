@@ -97,7 +97,7 @@ export const tts = async (voiceChannel, text) =>
 
     console.log('wrote to file', !!fs.readFileSync(filename));
 
-    const dispatchers = connection.playFile(filename);
+    const dispatchers = connection.play(filename);
 
     // await sleep(500);
 
