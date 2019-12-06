@@ -87,6 +87,9 @@ export const tts = async (voiceChannel, text) =>
     bufferStream.end(data.AudioStream);
 
     const dispatcher = connection.playStream(stream);
+
+    dispatcher.on('end', resolve);
+    dispatcher.on('error', reject);
     console.log('playStream');
     await sleep(500);
 
@@ -104,10 +107,10 @@ export const tts = async (voiceChannel, text) =>
     // convert AudioStream into a readable stream
     pcmStream.end(pcm.AudioStream);
 
-    const dispatcher = connection.playConvertedStream(pcmStream);
+    const pcmDismatcher = connection.playConvertedStream(pcmStream);
     console.log('pcmStream');
     await sleep(500);
 
-    dispatcher.on('end', resolve);
-    dispatcher.on('error', reject);
+    pcmDismatcher.on('end', resolve);
+    pcmDismatcher.on('error', reject);
   });
