@@ -143,12 +143,6 @@ export const resolvers = {
       return e.message || 'i broke :/';
     }
 
-    // const url = await client.sounds.create({ text, voice: 'en-US' });
-
-    // console.log(url);
-
-    // await playStreamFromUrl(voiceChannel, url);
-
     voiceChannel.leave();
   }
 };
