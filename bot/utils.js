@@ -1,5 +1,6 @@
 import axios from 'axios';
 import stream from 'stream';
+import fs from 'fs';
 
 import { reddit, polly } from './config';
 
@@ -93,23 +94,32 @@ export const tts = async (voiceChannel, text) =>
     // console.log('playStream');
     // await sleep(500);
 
-    const pcm = await polly
+    const data = await polly
       .synthesizeSpeech({
         Text: text,
-        OutputFormat: 'pcm',
+        OutputFormat: 'mp3',
         VoiceId: 'Joanna'
       })
       .promise();
 
-    // Initiate the source
-    var pcmStream = new stream.PassThrough();
+    const id =
+      Math.random()
+        .toString(36)
+        .substring(2, 15) +
+      Math.random()
+        .toString(36)
+        .substring(2, 15);
+
+    const filename = `./${id}.mp3`;
+
+    fs.writeFileSync(`./${id}.mp3`, data.AudioStream);
+
+    const stream = fs.createReadStream(filename);
 
     // convert AudioStream into a readable stream
     pcmStream.end(pcm.AudioStream);
 
-    const pcmDismatcher = connection.playConvertedStream(pcmStream);
-    console.log('pcmStream');
-    await sleep(500);
+    const pcmDismatcher = connection.playStream(stream);
 
     pcmDismatcher.on('end', resolve);
     pcmDismatcher.on('error', reject);
