@@ -7,7 +7,7 @@
   "dependencies": {
     "aws-sdk": "^2.585.0",
     "axios": "^0.19.0",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^11.4.2",
     "dotenv": "^8.2.0",
     "esm": "^3.2.4",
     "fluent-ffmpeg": "^2.1.2",
@@ -20,6 +20,9 @@
     "soundoftext-js": "^1.0.2",
     "stream-buffers": "^3.0.2",
     "ytdl-core": "^1.0.3"
+  },
+  "engines": {
+    "node": "11"
   },
   "template": "node"
 }
