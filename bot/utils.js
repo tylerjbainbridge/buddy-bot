@@ -78,7 +78,7 @@ export const tts = async (voiceChannel, text) =>
       })
       .promise();
 
-    const dispatcher = connection.playArbitraryInput(data.AudioStream);
+    const dispatcher = connection.playArbitraryInput(data);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
