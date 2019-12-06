@@ -60,8 +60,6 @@ export const playStreamFromUrl = (voiceChannel, url) =>
       headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
     });
 
-    console.log(data);
-
     const dispatcher = connection.playStream(data);
 
     dispatcher.on('end', resolve);
