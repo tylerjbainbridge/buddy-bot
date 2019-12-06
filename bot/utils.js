@@ -116,9 +116,7 @@ export const tts = async (voiceChannel, text) =>
 
     fs.writeFileSync(`./${id}.mp3`, data.AudioStream);
 
-    const stream = fs.createReadStream(filename);
-
-    const dispatchers = connection.playStream(stream);
+    const dispatchers = connection.playFile(filename);
 
     dispatchers.on('end', resolve);
     dispatchers.on('error', reject);
