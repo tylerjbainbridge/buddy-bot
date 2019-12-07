@@ -14,7 +14,7 @@ export const speechToText = new SpeechToTextV1({
 });
 
 export const test = voiceChannel =>
-  new Promise((resolve, reject) => {
+  new Promise(async resolve => {
     {
       // const mic = new Mic();
       // const micStream = mic.startRecording();
@@ -27,12 +27,11 @@ export const test = voiceChannel =>
 
       // micStream.pipe(speaker);
 
-      const connection = await voiceChannel.join()
-  
+      const connection = await voiceChannel.join();
+
       const receiver = connection.createReceiver();
 
       const pcmStream = receiver.createPCMStream(user);
-
 
       // create the stream
       const recognizeStream = speechToText.recognizeUsingWebSocket({
