@@ -1,6 +1,5 @@
 import axios from 'axios';
 import _ from 'lodash';
-import client from 'soundoftext-js';
 
 import {
   mentionUsernames,
@@ -13,6 +12,8 @@ import {
   playStreamFromUrl,
   tts
 } from './utils';
+
+import { test } from './watson';
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js';
 
@@ -144,5 +145,14 @@ export const resolvers = {
     }
 
     voiceChannel.leave();
+  },
+  test: async (text, meta) => {
+    const voiceChannel = meta.msg.member.voice.channel;
+
+    if (!voiceChannel) {
+      return 'you need to be in a voice channel for this to work';
+    }
+
+    test(voiceChannel);
   }
 };

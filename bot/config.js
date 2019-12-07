@@ -10,6 +10,8 @@ export const polly = new AWS.Polly({
   region: 'us-east-1'
 });
 
+export const transcribe = new AWS.TranscribeService();
+
 export const reddit = new snoowrap({
   userAgent: 'official_jamie_bot 1.0',
   clientId: 'cP1UQVDfFIXqlA',
