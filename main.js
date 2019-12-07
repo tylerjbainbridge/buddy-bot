@@ -30,45 +30,45 @@ const FIFTEEN_MINUTES = 900000;
 //   process.exit();
 // })();
 
-// export const BOT_TEST_CHANNEL_ID = '649013668373200929';
+export const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
-// export const client = new Discord.Client();
+export const client = new Discord.Client();
 
-// // if (true) {
-// if (process.env.NODE_ENV === 'production') {
-//   (async () => {
-//     while (true) {
-//       // Ping the heroku app every fifteen minutes to keep it from sleeping
-//       await sleep(FIFTEEN_MINUTES);
-//       await axios.get('https://v-buddy-bot.herokuapp.com');
-//     }
-//   })();
+// if (true) {
+if (process.env.NODE_ENV === 'production') {
+  (async () => {
+    while (true) {
+      // Ping the heroku app every fifteen minutes to keep it from sleeping
+      await sleep(FIFTEEN_MINUTES);
+      await axios.get('https://v-buddy-bot.herokuapp.com');
+    }
+  })();
 
-//   client.once('ready', () => {
-//     console.log(`Logged in as ${client.user.tag}.`);
+  client.once('ready', () => {
+    console.log(`Logged in as ${client.user.tag}.`);
 
-//     if (process.env.DYNO) {
-//       const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
-//       const date = moment()
-//         .tz('America/New_York')
-//         .format('M/D/YYYY, h:mm:ss a');
+    if (process.env.DYNO) {
+      const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+      const date = moment()
+        .tz('America/New_York')
+        .format('M/D/YYYY, h:mm:ss a');
 
-//       channel.send(`beep boop BuddyBot updated (${date})`);
+      channel.send(`beep boop BuddyBot updated (${date})`);
 
-//       // Log when the script is shutting down.
-//       process.on('SIGTERM', function() {
-//         channel.send(`BuddyBot offline (updating)`);
-//       });
-//     }
-//   });
+      // Log when the script is shutting down.
+      process.on('SIGTERM', function() {
+        channel.send(`BuddyBot offline (updating)`);
+      });
+    }
+  });
 
-//   client.on('message', handler(client));
+  client.on('message', handler(client));
 
-//   client.login(process.env.TOKEN);
-// }
+  client.login(process.env.TOKEN);
+}
 
-// require('http')
-//   .createServer((_, response) => {
-//     response.end('Hello :)');
-//   })
-//   .listen(process.env.PORT || 3000);
+require('http')
+  .createServer((_, response) => {
+    response.end('Hello :)');
+  })
+  .listen(process.env.PORT || 3000);
