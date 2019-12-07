@@ -13,22 +13,22 @@ process.on('unhandledRejection', reason => {
 const FIFTEEN_MINUTES = 900000;
 
 // Test
-(async () => {
-  await test();
-  // await handler()({
-  //   content: 'bb say something',
-  //   // Mocked discord API.
-  //   channel: {
-  //     send: console.log
-  //   },
-  //   react: () => {},
-  //   author: {
-  //     username: 'Bob'
-  //   }
-  // });
+// (async () => {
+//   await test();
+//   // await handler()({
+//   //   content: 'bb say something',
+//   //   // Mocked discord API.
+//   //   channel: {
+//   //     send: console.log
+//   //   },
+//   //   react: () => {},
+//   //   author: {
+//   //     username: 'Bob'
+//   //   }
+//   // });
 
-  process.exit();
-})();
+//   process.exit();
+// })();
 
 // export const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
