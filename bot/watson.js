@@ -29,11 +29,9 @@ export const test = (voiceChannel, user) =>
 
       const connection = await voiceChannel.join();
 
-      const receiver = connection.createReceiver();
-
       console.log('listening to user', user);
 
-      const pcmStream = receiver.createPCMStream(user);
+      const pcmStream = connection.receiver.createPCMStream(user);
 
       pcpStream.on('data', () => {
         console.log('user speaking!');
