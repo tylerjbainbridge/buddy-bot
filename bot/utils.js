@@ -102,8 +102,9 @@ export const tts = async (voiceChannel, text) =>
 
     // await sleep(500);
 
-    dispatchers.on('end', resolve);
+    dispatchers.on('end', async () => {
+      await unlinkAsync(filename);
+      resolve();
+    });
     dispatchers.on('error', reject);
-
-    await unlinkAsync(filename);
   });
