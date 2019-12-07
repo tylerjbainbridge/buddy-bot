@@ -117,7 +117,7 @@ export const resolvers = {
     return `boy din?\n${mentionUsernames(buds)}`;
   },
   play: async (fileName, meta) => {
-    const voiceChannel = meta.msg.member.voiceChannel;
+    const voiceChannel = meta.msg.member.voice.channel;
 
     if (!voiceChannel) {
       return 'you need to be in a voice channel for this to work';
@@ -131,7 +131,7 @@ export const resolvers = {
     voiceChannel.leave();
   },
   say: async (text, meta) => {
-    const voiceChannel = meta.msg.member.voiceChannel;
+    const voiceChannel = meta.msg.member.voice.channel;
 
     if (!voiceChannel) {
       return 'you need to be in a voice channel for this to work';
