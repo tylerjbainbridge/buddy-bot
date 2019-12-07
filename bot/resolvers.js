@@ -153,6 +153,8 @@ export const resolvers = {
       return 'you need to be in a voice channel for this to work';
     }
 
-    test(voiceChannel);
+    const user = findByUsername(meta.client.users, text);
+
+    test(voiceChannel, user);
   }
 };

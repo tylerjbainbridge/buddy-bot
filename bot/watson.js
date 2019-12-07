@@ -13,7 +13,7 @@ export const speechToText = new SpeechToTextV1({
   url: 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 });
 
-export const test = voiceChannel =>
+export const test = (voiceChannel, user) =>
   new Promise(async resolve => {
     {
       // const mic = new Mic();
@@ -31,7 +31,13 @@ export const test = voiceChannel =>
 
       const receiver = connection.createReceiver();
 
+      console.log('listening to user', user);
+
       const pcmStream = receiver.createPCMStream(user);
+
+      pcpStream.on('data', () => {
+        console.log('user speaking!');
+      });
 
       // create the stream
       const recognizeStream = speechToText.recognizeUsingWebSocket({

@@ -10,7 +10,7 @@ import { reddit, polly } from './config';
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const findByUsername = (users, username) =>
-  users.find(user => user.username === username);
+  users.find(user => user.username.toLowerCase() === username.toLowerCase());
 
 export const filterOutBots = users => users.filter(({ bot }) => !bot);
 
