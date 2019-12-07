@@ -48,6 +48,7 @@ export const test = voiceChannel =>
 
       recognizeStream.on('data', function(event) {
         onEvent('Data:', event.toString());
+        resolve();
       });
 
       recognizeStream.on('error', function(event) {
