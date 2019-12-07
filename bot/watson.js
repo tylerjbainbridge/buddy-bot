@@ -31,7 +31,10 @@ export const test = (voiceChannel, user) =>
 
       console.log('listening to user', user);
 
-      const pcmStream = connection.receiver.createStream(user);
+      const pcmStream = connection.receiver.createStream(user, {
+        mode: 'pcm',
+        end: 'silence'
+      });
 
       pcmStream.on('data', () => {
         console.log('user speaking!');
