@@ -66,7 +66,7 @@ export const playStreamFromUrl = (voiceChannel, url) =>
       headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
     });
 
-    const dispatcher = connection.playStream(stream);
+    const dispatcher = connection.play(stream);
 
     dispatcher.on('end', resolve);
     dispatcher.on('error', reject);
@@ -98,7 +98,7 @@ export const tts = async (voiceChannel, text) =>
 
     await writeFileAsync(filename, data.AudioStream);
 
-    const dispatchers = connection.playFile(filename);
+    const dispatchers = connection.play(filename);
 
     // await sleep(500);
 
