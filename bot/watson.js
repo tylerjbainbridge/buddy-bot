@@ -8,7 +8,7 @@ import { IamAuthenticator } from 'ibm-watson/auth';
 
 export const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
-    apikey: 'OUZH9u4AaMsmNWuxIEsWKdMDamXslMdjorKmV62QOtvk'
+    apikey: process.env.IBM_API_KEY
   }),
   url: 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 });
