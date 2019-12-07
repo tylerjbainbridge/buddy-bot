@@ -1,6 +1,9 @@
 import axios from 'axios';
-import stream from 'stream';
+import { promisify } from 'util';
 import fs from 'fs';
+
+const unlinkAsync = promisify(fs.unlink);
+const writeFileAsync = promisify(fs.writeFile);
 
 import { reddit, polly } from './config';
 
@@ -93,14 +96,14 @@ export const tts = async (voiceChannel, text) =>
 
     const filename = `./${id}.mp3`;
 
-    fs.writeFileSync(filename, data.AudioStream);
+    await writeFileAsync(filename, data.AudioStream);
 
-    console.log('wrote to file', !!fs.readFileSync(filename));
-
-    const dispatchers = connection.play(data);
+    const dispatchers = connection.playFile(filename);
 
     // await sleep(500);
 
     dispatchers.on('end', resolve);
     dispatchers.on('error', reject);
+
+    await unlinkAsync(filename);
   });
