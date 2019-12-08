@@ -10,10 +10,10 @@ import {
   getMessageFromResolver,
   postToJamieReddit,
   playStreamFromUrl,
-  tts
+  talk,
+  listen,
+  joinCurrentVoiceChannel
 } from './utils';
-
-import { test } from './watson';
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js';
 
@@ -118,47 +118,33 @@ export const resolvers = {
     return `boy din?\n${mentionUsernames(buds)}`;
   },
   play: async (fileName, meta) => {
-    const voiceChannel = meta.msg.member.voice.channel;
+    const connection = await joinCurrentVoiceChannel(meta);
 
-    if (!voiceChannel) {
-      return 'you need to be in a voice channel for this to work';
-    }
-
-    await playStreamFromUrl(
-      voiceChannel,
-      `https://v-buddy-bot.s3.amazonaws.com/${fileName}.mp3`
-    );
-
-    voiceChannel.leave();
+    await playFileFromBucket(connection, fileName);
   },
   say: async (text, meta) => {
-    const voiceChannel = meta.msg.member.voice.channel;
-
-    if (!voiceChannel) {
-      return 'you need to be in a voice channel for this to work';
-    }
+    const connection = await joinCurrentVoiceChannel(meta);
 
     try {
-      await tts(voiceChannel, text);
+      await talk(connection, text, meta);
     } catch (e) {
       return e.message || 'i broke :/';
     }
-
-    voiceChannel.leave();
   },
-  test: async (text, meta) => {
-    const voiceChannel = meta.msg.member.voice.channel;
+  voice: async (_, meta) => {
+    const connection = await joinCurrentVoiceChannel(meta);
 
-    if (!voiceChannel) {
-      return 'you need to be in a voice channel for this to work';
+    const command = await listen(connection, meta);
+
+    switch (command) {
+      case 'hello robot':
+        await talk(connection, 'hello human', meta);
+        break;
+      case 'play corner':
+        await await playFileFromBucket(connection, 'corner');
+        break;
+      default:
+        await talk(connection, `beep boop i don't understand`, meta);
     }
-
-    const command = await test(voiceChannel, meta);
-
-    if (command.trim().includes('hello robot')) {
-      await tts(voiceChannel, 'hello human');
-    }
-
-    console.log('test done');
   }
 };

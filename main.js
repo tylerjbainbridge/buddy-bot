@@ -2,8 +2,7 @@ import Discord from 'discord.js';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-import { test } from './bot/watson';
-import { sleep } from './bot/utils';
+import { sleep, getBotChannel } from './bot/utils';
 import { handler } from './bot/handler';
 
 process.on('unhandledRejection', reason => {
@@ -14,7 +13,6 @@ const FIFTEEN_MINUTES = 900000;
 
 // Test
 // (async () => {
-//   await test();
 //   // await handler()({
 //   //   content: 'bb say something',
 //   //   // Mocked discord API.
@@ -48,7 +46,8 @@ if (process.env.NODE_ENV === 'production') {
     console.log(`Logged in as ${client.user.tag}.`);
 
     if (process.env.DYNO) {
-      const channel = client.channels.get(BOT_TEST_CHANNEL_ID);
+      const channel = getBotChannel(client);
+
       const date = moment()
         .tz('America/New_York')
         .format('M/D/YYYY, h:mm:ss a');

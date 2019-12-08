@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { promisify } from 'util';
 import fs from 'fs';
+import _ from 'lodash';
+import minimist from 'minimist';
 
 const unlinkAsync = promisify(fs.unlink);
 const writeFileAsync = promisify(fs.writeFile);
 
-import { reddit, polly } from './config';
+import { reddit, polly, speechToText, BOT_TEST_CHANNEL_ID } from './config';
 
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -25,6 +27,19 @@ export const test = (trigger, content) =>
 export const removeFromString = (string, toRemove) =>
   string.replace(new RegExp(toRemove, 'i'), '').trim();
 
+export const getBotChannel = client => client.channels.get(BOT_TEST_CHANNEL_ID);
+
+export const joinCurrentVoiceChannel = async meta => {
+  const voiceChannel = meta.msg.member.voice.channel;
+
+  if (!voiceChannel) {
+    meta.msg.channel.send(`Join a voice channel and try again`);
+    throw 'User not in voice channel';
+  }
+
+  return await voiceChannel.join();
+};
+
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
 
@@ -42,8 +57,14 @@ export const getResolver = (resolvers, command) => {
   return null;
 };
 
-export const getMessageFromResolver = async (resolvers, match, config) =>
-  await resolvers[match.base](match.sub, config);
+export const getMessageFromResolver = async (resolvers, match, meta) =>
+  await resolvers[match.base](match.sub, {
+    ...meta,
+    flags: minimist(match.sub.split(' '), {
+      boolean: ['silent'],
+      alias: { s: 'silent' }
+    })
+  });
 
 export const postToJamieReddit = async title => {
   try {
@@ -57,10 +78,8 @@ export const postToJamieReddit = async title => {
   }
 };
 
-export const playStreamFromUrl = (voiceChannel, url) =>
+export const playStreamFromUrl = (connection, url) =>
   new Promise(async (resolve, reject) => {
-    const connection = await voiceChannel.join().catch(err => console.log(err));
-
     const { data: stream } = await axios.get(url, {
       responseType: 'stream',
       headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
@@ -72,11 +91,16 @@ export const playStreamFromUrl = (voiceChannel, url) =>
     dispatcher.on('error', reject);
   });
 
-export const tts = async (voiceChannel, text) =>
-  new Promise(async (resolve, reject) => {
-    const connection = await voiceChannel.join().catch(err => console.log(err));
+export const playFileFromBucket = async (connection, fileName) => {
+  await playStreamFromUrl(
+    connection,
+    `https://v-buddy-bot.s3.amazonaws.com/${fileName}.mp3`
+  );
+};
 
-    console.log({ text });
+export const talk = async (connection, text, meta) =>
+  new Promise(async (resolve, reject) => {
+    if (meta.flags.silent) return resolve();
 
     const data = await polly
       .synthesizeSpeech({
@@ -100,11 +124,91 @@ export const tts = async (voiceChannel, text) =>
 
     const dispatchers = connection.play(filename);
 
-    // await sleep(500);
-
     dispatchers.on('end', async () => {
       await unlinkAsync(filename);
       resolve();
     });
+
     dispatchers.on('error', reject);
+  });
+
+export const listen = (connection, meta) =>
+  new Promise(async (resolve, reject) => {
+    // 16-bit signed PCM, stereo 48KHz stream
+    const pcmStream = connection.receiver.createStream(meta.msg.author, {
+      mode: 'pcm',
+      end: 'silence'
+    });
+
+    // pcmStream.pipe(fs.createWriteStream(__dirname + `/${Date.now()}.pcm`));
+
+    // create the stream
+    const recognizeStream = speechToText.recognizeUsingWebSocket({
+      model: 'en-US_BroadbandModel',
+      contentType: 'audio/l16;rate=48000;channels=2',
+      interimResults: true,
+      inactivityTimeout: -1
+    });
+
+    await talk(connection, `I'm Listening...`, meta);
+    await playFileFromBucket(connection, 'beep');
+
+    pcmStream.pipe(recognizeStream);
+
+    meta.msg.channel.send('Listening...');
+
+    pcmStream.on(
+      'data',
+      _.throttle(() => {
+        console.log('user is speaking');
+      }, 1000)
+    );
+
+    pcmStream.on('error', function(event) {
+      console.log('uh oh!');
+    });
+
+    pcmStream.on('close', function(event) {
+      console.log('user is done speaking');
+    });
+
+    // Backup timeout.
+    // setTimeout(() => {
+    //   pcmStream.destroy();
+    // }, 5000);
+
+    // // pipe in some audio
+    // fs.createReadStream(__dirname + '/test.wav').pipe(recognizeStream);
+
+    recognizeStream.on('data', function(event) {
+      const text = event.toString();
+
+      onEvent('Data:', text);
+
+      getBotChannel(meta.client).send(
+        `I heard ${meta.msg.author.username} say: ${text}`
+      );
+
+      // Cleanup
+      pcmStream.destroy();
+
+      // Resolve promise with the detected text
+      resolve(text.trim());
+    });
+
+    recognizeStream.on('error', function(event) {
+      onEvent('Error:', event);
+      getBotChannel(meta.client).send('Error processing audio.');
+      reject();
+    });
+
+    recognizeStream.on('close', function(event) {
+      onEvent('Close:', event);
+      getBotChannel(meta.client).send('Watson exit.');
+    });
+
+    // Displays events on the console.
+    function onEvent(name, event) {
+      console.log(name, JSON.stringify(event, null, 2));
+    }
   });

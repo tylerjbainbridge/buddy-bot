@@ -12,6 +12,7 @@
     "esm": "^3.2.4",
     "ibm-watson": "^5.2.0",
     "lodash": "^4.17.15",
+    "minimist": "^1.2.0",
     "moment": "2.24.0",
     "moment-timezone": "0.5.27",
     "node-opus": "^0.3.3",
