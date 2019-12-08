@@ -2,7 +2,9 @@ import SpeechToTextV1 from 'ibm-watson/speech-to-text/v1';
 import { IamAuthenticator } from 'ibm-watson/auth';
 // import micStream from 'line-in';
 // import Speaker from 'speaker';
-// import fs from 'fs';
+import fs from 'fs';
+
+import { findByUsername } from './utils';
 
 // import Mic from 'node-microphone';
 
@@ -13,8 +15,10 @@ export const speechToText = new SpeechToTextV1({
   url: 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 });
 
-export const test = (voiceChannel, user) =>
+export const test = (voiceChannel, meta) =>
   new Promise(async resolve => {
+    const user = findByUsername(meta.client.users, 'tyler');
+
     {
       // const mic = new Mic();
       // const micStream = mic.startRecording();
@@ -31,31 +35,53 @@ export const test = (voiceChannel, user) =>
 
       console.log('listening to user', user);
 
+      // 16-bit signed PCM, stereo 48KHz stream
       const pcmStream = connection.receiver.createStream(user, {
         mode: 'pcm',
-        end: 'silence'
+        end: 'manual'
       });
 
-      pcmStream.on('data', () => {
-        console.log('user speaking!');
-      });
+      // pcmStream.pipe(fs.createWriteStream(__dirname + `/${Date.now()}.pcm`));
+
+      meta.msg.channel.send('listening...');
 
       // create the stream
       const recognizeStream = speechToText.recognizeUsingWebSocket({
-        // contentType: 'audio/wav',
-        contentType: 'audio/l16;rate=48000;channels=1',
+        // contentType: 'audio/ogg;codecs=opus',
+        model: 'en-US_BroadbandModel',
+        // objectMode: true,
+        contentType: 'audio/l16;rate=48000;channels=2',
         interimResults: true,
         inactivityTimeout: -1
       });
 
       pcmStream.pipe(recognizeStream);
 
+      pcmStream.on('data', () => {
+        console.log('user speaking!');
+      });
+
+      pcmStream.on('error', function(event) {
+        console.log('uh oh!');
+      });
+
+      pcmStream.on('close', function(event) {
+        console.log('user is DONE speaking');
+      });
+
       // // pipe in some audio
       // fs.createReadStream(__dirname + '/test.wav').pipe(recognizeStream);
 
       recognizeStream.on('data', function(event) {
-        onEvent('Data:', event.toString());
-        resolve();
+        const text = event.toString();
+
+        onEvent('Data:', text);
+
+        meta.msg.channel.send(`I heard you say: ${text}`);
+
+        resolve(text);
+
+        pcmStream.destroy();
       });
 
       recognizeStream.on('error', function(event) {
@@ -64,7 +90,7 @@ export const test = (voiceChannel, user) =>
 
       recognizeStream.on('close', function(event) {
         onEvent('Close:', event);
-        resolve();
+        // resolve();
       });
 
       // Displays events on the console.

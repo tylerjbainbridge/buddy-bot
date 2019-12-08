@@ -153,8 +153,12 @@ export const resolvers = {
       return 'you need to be in a voice channel for this to work';
     }
 
-    const user = findByUsername(meta.client.users, 'tyler');
+    const command = await test(voiceChannel, meta);
 
-    test(voiceChannel, user);
+    if (command.trim().includes('hello robot')) {
+      await tts(voiceChannel, 'hello human');
+    }
+
+    console.log('test done');
   }
 };
