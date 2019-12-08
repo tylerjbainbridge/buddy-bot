@@ -44,6 +44,7 @@ export const handler = client => async msg => {
 
         if (match) {
           await msg.react('😃');
+
           responseMessage = await getMessageFromResolver(resolvers, match, {
             msg,
             client,

@@ -2,18 +2,12 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import {
-  mentionUsernames,
-  filterOutBots,
-  findByUsername,
-  mention,
   getResolver,
   getMessageFromResolver,
-  postToJamieReddit,
-  playStreamFromUrl,
-  talk,
-  listen,
-  joinCurrentVoiceChannel
+  postToJamieReddit
 } from './utils';
+
+import { Voice } from './Voice';
 
 import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js';
 
@@ -95,56 +89,59 @@ export const resolvers = {
   sucks: () => 'no you do :smile:',
   'did you love it did you hate it': () => 'what would you rate it?',
   "you're the best, you're the best": () => 'what should _I_ review next?',
-  'tell jam to buy cod|you know what to do': (_, client) => {
-    const jam = findByUsername(client.users, 'jam');
+  'tell jam to buy cod|you know what to do': (_, meta) => {
+    const jam = meta.users.findByUsername('jam');
 
     return `${mention(jam)}, buy cod!`;
   },
   sandbox: () => 'https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot',
   repo: () => 'https://github.com/tylerjbainbridge/buddy-bot',
   cod: (command, meta) => {
-    const users = filterOutBots(meta.client.users).filter(
-      ({ username }) => !BUDS_WITHOUT_COD.includes(username)
-    );
+    const codBuds = meta.users
+      .filterOutBots()
+      .filter(({ username }) => !BUDS_WITHOUT_COD.includes(username));
 
-    const jam = findByUsername(meta.client.users, 'jam');
+    const jam = meta.users.findByUsername('jam');
 
-    return `let's play cod ${command || 'now'}\n${mentionUsernames(
-      users
-    )}\n${mention(jam)} pls play with us :(`;
+    return `let's play cod ${command ||
+      'now'}\n${meta.users.getBatchUserMention(codBuds)}\n${mention(
+      jam
+    )} pls play with us :(`;
   },
   'boy din': (_, meta) => {
-    const buds = filterOutBots(meta.client.users);
-    return `boy din?\n${mentionUsernames(buds)}`;
+    const buds = meta.users.filterOutBots();
+    return `boy din?\n${meta.users.getBatchUserMention(buds)}`;
   },
   play: async (fileName, meta) => {
-    const connection = await joinCurrentVoiceChannel(meta);
+    const voice = new Voice(meta);
 
-    await playFileFromBucket(connection, fileName);
+    await voice.connect();
+
+    await voice.playFileFromBucket(fileName);
   },
   say: async (text, meta) => {
-    const connection = await joinCurrentVoiceChannel(meta);
+    const voice = new Voice(meta);
 
-    try {
-      await talk(connection, text, meta);
-    } catch (e) {
-      return e.message || 'i broke :/';
-    }
+    await voice.connect();
+
+    await voice.talk(text);
   },
   voice: async (_, meta) => {
-    const connection = await joinCurrentVoiceChannel(meta);
+    const voice = new Voice(meta);
 
-    const command = await listen(connection, meta);
+    await voice.connect();
+
+    const command = await voice.listen();
 
     switch (command) {
       case 'hello robot':
-        await talk(connection, 'hello human', meta);
+        await voice.talk('hello human');
         break;
       case 'play corner':
-        await await playFileFromBucket(connection, 'corner');
+        await await voice.playFileFromBucket('corner');
         break;
       default:
-        await talk(connection, `beep boop i don't understand`, meta);
+        await voice.talk(`beep boop i don't understand`);
     }
   }
 };
