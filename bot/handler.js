@@ -29,7 +29,7 @@ export const handler = client => async message => {
     const { _: parts, ...flags } = minimist(content.split(" "), {
       string: ["pollyVoice"],
       boolean: ["silent", "talk"],
-      alias: { s: "silent", p: "pollyVoice", v: "talk" },
+      alias: { s: "silent", p: "pollyVoice", t: "talk" },
     });
 
     await root.run(parts.join(" "), {

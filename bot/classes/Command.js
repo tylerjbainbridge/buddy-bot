@@ -85,7 +85,7 @@ export class Command {
     let nextInput = removeFromString(input, match);
 
     // Initialize foice
-    if ((this.useVoiceCommand || meta.flags.voice) && !meta.voice) {
+    if ((this.useVoiceCommand || meta.flags.talk) && !meta.voice) {
       meta.voice = new Voice(meta);
       await meta.voice.connect();
     }
