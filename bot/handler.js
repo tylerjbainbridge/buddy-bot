@@ -1,5 +1,5 @@
 import { Command } from './classes/Command';
-import { commands } from './commands';
+import { commands } from '../commands';
 import minimist from 'minimist';
 
 import { Users } from './classes/Users';
