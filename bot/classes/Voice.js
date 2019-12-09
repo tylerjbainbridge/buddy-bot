@@ -6,7 +6,7 @@ import _ from 'lodash';
 const unlinkAsync = promisify(fs.unlink);
 const writeFileAsync = promisify(fs.writeFile);
 
-import { polly, speechToText } from '../config';
+import { polly, speechToText, POLLY_VOICES } from '../config';
 import { getBotChannel } from '../utils';
 
 export class Voice {
@@ -45,7 +45,7 @@ export class Voice {
         .synthesizeSpeech({
           Text: text,
           OutputFormat: 'mp3',
-          VoiceId: 'Joanna'
+          VoiceId: this.flags.pollyVoice || POLLY_VOICES[0] // default = Joanna
         })
         .promise();
 
