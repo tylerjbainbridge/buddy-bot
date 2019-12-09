@@ -31,6 +31,7 @@ export const handler = client => async message => {
       client,
       users: new Users({ client, message }),
       flags: minimist(input.split(' '), {
+        string: ['pollyVoice'],
         boolean: ['silent'],
         alias: { s: 'silent' }
       })
