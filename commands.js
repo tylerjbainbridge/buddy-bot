@@ -10,7 +10,7 @@ import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD, POLLY_VOICES } from './bot/co
 
 export const commands = [
   new Command({
-    trigger: 'hello|hi',
+    trigger: 'hello|hi|hello robot',
     response: (_, meta) =>
       `hey ${meta.message.author.username || ''}! im your bot bud`
   }),
@@ -218,7 +218,7 @@ export const commands = [
       new Command({
         trigger: 'play corner',
         action: async (_, meta) => {
-          await meta.voice.playFileFromBucket('corner');
+          await meta.voiceInstance.playFileFromBucket('corner');
         }
       })
     ]

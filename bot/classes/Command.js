@@ -85,17 +85,17 @@ export class Command {
     let nextInput = removeFromString(input, match);
 
     // Initialize foice
-    if ((this.useVoiceCommand || meta.flags.talk) && !meta.voice) {
-      meta.voice = new Voice(meta);
-      await meta.voice.connect();
+    if ((this.useVoiceCommand || meta.flags.talk || meta.flags.voice) && !meta.voiceInstance) {
+      meta.voiceInstance = new Voice(meta);
+      await meta.voiceInstance.connect();
     }
 
     // Special case
     if (nextInput === "help") {
       meta.message.channel.send(this.getHelp());
       return true;
-    } else if (this.useVoiceCommand) {
-      nextInput = await meta.voice.listen();
+    } else if (this.useVoiceCommand || this.meta.voiceInstance) {
+      nextInput = await meta.voiceInstance.listen();
     }
 
     // Check if any sub commands were matches
@@ -116,8 +116,8 @@ export class Command {
         ? this.response
         : await this.response(nextInput, meta);
 
-      if (meta.flags.talk || meta.voice) {
-        await meta.voice.talk(content);
+      if (meta.flags.talk || meta.voiceInstance) {
+        await meta.voiceInstance.talk(content);
       } else {
         meta.message.channel.send(content);
       }
