@@ -21,7 +21,7 @@ export const handler = client => async message => {
 
   const root = new Command({
     trigger: TRIGGERS.join("|"),
-    message: "command not found.",
+    response: "command not found.",
     commands,
   });
 
