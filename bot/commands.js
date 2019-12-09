@@ -151,7 +151,7 @@ export const commands = [
     trigger: 'tell jam to buy cod|you know what to do',
     response: (_, meta) => {
       const jam = meta.users.findByUsername('jam');
-      return `${mention(jam)}, buy cod!`;
+      return `${meta.users.getUserMention(jam)}, buy cod!`;
     }
   }),
 
@@ -165,9 +165,9 @@ export const commands = [
       const jam = meta.users.findByUsername('jam');
 
       return `let's play cod ${command ||
-        'now'}\n${meta.users.getBatchUserMention(codBuds)}\n${mention(
-        jam
-      )} pls play with us :(`;
+        'now'}\n${meta.users.getBatchUserMention(
+        codBuds
+      )}\n${meta.users.getUserMention(jam)} pls play with us :(`;
     }
   }),
 
