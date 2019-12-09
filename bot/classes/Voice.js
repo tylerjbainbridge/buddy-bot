@@ -76,7 +76,7 @@ export class Voice {
     return new Promise(async (resolve, reject) => {
       // 16-bit signed PCM, stereo 48KHz stream
       const pcmStream = this.connection.receiver.createStream(
-        meta.flags.voiceTest ? meta.users.findByUsername('buddy-bot') : this.message.author,
+        this.flags.voiceTest ? this.users.findByUsername('buddy-bot') : this.message.author,
         {
           mode: "pcm",
           end: "silence",
@@ -98,8 +98,8 @@ export class Voice {
 
       pcmStream.pipe(recognizeStream);
 
-      if (meta.flags.voiceTest) {
-        await this.talk(meta.flags.voiceTest);
+      if (this.flags.voiceTest) {
+        await this.talk(this.flags.voiceTest);
       }
 
       this.message.channel.send("Listening...");
