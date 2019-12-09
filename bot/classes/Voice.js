@@ -57,11 +57,11 @@ export class Voice {
           .toString(36)
           .substring(2, 15);
 
-      const filename = `./${id}.mp3`;
+      const filename = `${__dirname}/temp/${id}.mp3`;
 
-      await writeFileAsync(__dirname + filename, data.AudioStream);
+      await writeFileAsync(filename, data.AudioStream);
 
-      const dispatchers = this.connection.play(__dirname + filename);
+      const dispatchers = this.connection.play(filename);
 
       dispatchers.on('end', async () => {
         await unlinkAsync(filename);
