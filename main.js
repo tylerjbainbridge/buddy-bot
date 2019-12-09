@@ -5,6 +5,8 @@ import moment from "moment-timezone";
 import { sleep, getBotChannel } from "./bot/utils";
 import { handler } from "./bot/handler";
 
+const FIFTEEN_MINUTES = 900000;
+
 process.on("unhandledRejection", reason => {
   console.log("Unhandled Rejection at:", reason.stack || reason);
 });
