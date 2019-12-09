@@ -6,7 +6,7 @@ import { postToJamieReddit } from './bot/utils';
 import { Command } from './bot/classes/Command';
 import { Voice } from './bot/classes/Voice';
 
-import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './bot/config.js';
+import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD, POLLY_VOICES } from './bot/config.js';
 
 export const commands = [
   new Command({
@@ -43,6 +43,11 @@ export const commands = [
   new Command({
     trigger: "you're the best, you're the best",
     response: 'what should _I_ review next?'
+  }),
+
+  new Command({
+    trigger: "pollyVoiceOptions",
+    response: POLLY_VOICES.map((voice) => `\`${voice}\``).join('\n')
   }),
 
   new Command({

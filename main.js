@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 import Discord from "discord.js";
 import axios from "axios";
 import moment from "moment-timezone";

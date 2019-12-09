@@ -59,9 +59,9 @@ export class Voice {
 
       const filename = `./${id}.mp3`;
 
-      await writeFileAsync(filename, data.AudioStream);
+      await writeFileAsync(__dirname + filename, data.AudioStream);
 
-      const dispatchers = this.connection.play(filename);
+      const dispatchers = this.connection.play(__dirname + filename);
 
       dispatchers.on('end', async () => {
         await unlinkAsync(filename);
