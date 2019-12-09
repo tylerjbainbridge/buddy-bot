@@ -32,7 +32,7 @@ export const handler = client => async message => {
       alias: { s: "silent", p: "pollyVoice" },
     });
 
-    await root.run(parts.join(" ").toLowerCase(), {
+    await root.run(parts.join(" "), {
       message,
       client,
       flags,
