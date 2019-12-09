@@ -88,13 +88,13 @@ export const commands = [
 
   new Command({
     trigger: 'gif',
-    response: async command => {
+    response: async input => {
       const {
         data: {
           data: { image_url: gif }
         }
       } = await axios.get(
-        `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${command}`
+        `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${input}`
       );
 
       if (!gif) return 'no gif found :(';
@@ -122,9 +122,9 @@ export const commands = [
 
   new Command({
     trigger: 'weather in',
-    response: async command => {
+    response: async input => {
       const { data: weatherData } = await axios.get(
-        `http://api.openweathermap.org/data/2.5/weather?appid=${WEATHER_APP_ID}&q=${command}`
+        `http://api.openweathermap.org/data/2.5/weather?appid=${WEATHER_APP_ID}&q=${input}`
       );
 
       if (!weatherData) return 'no weather found :(';
@@ -157,14 +157,14 @@ export const commands = [
 
   new Command({
     trigger: 'cod',
-    response: (command, meta) => {
+    response: (input, meta) => {
       const codBuds = meta.users
         .filterOutBots()
         .filter(({ username }) => !BUDS_WITHOUT_COD.includes(username));
 
       const jam = meta.users.findByUsername('jam');
 
-      return `let's play cod ${command ||
+      return `let's play cod ${input ||
         'now'}\n${meta.users.getBatchUserMention(
         codBuds
       )}\n${meta.users.getUserMention(jam)} pls play with us :(`;
