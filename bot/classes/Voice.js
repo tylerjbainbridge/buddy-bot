@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { promisify } from 'util';
-import fs from 'fs';
-import _ from 'lodash';
+import axios from "axios";
+import { promisify } from "util";
+import fs from "fs";
+import _ from "lodash";
 
 const unlinkAsync = promisify(fs.unlink);
 const writeFileAsync = promisify(fs.writeFile);
 
-import { polly, speechToText, POLLY_VOICES } from '../config';
-import { getBotChannel } from '../utils';
+import { polly, speechToText, POLLY_VOICES } from "../config";
+import { getBotChannel } from "../utils";
 
 export class Voice {
   constructor(meta) {
@@ -23,7 +23,7 @@ export class Voice {
 
     if (!this.voiceChannel) {
       this.message.channel.send(`Join a voice channel and try again`);
-      throw 'User not in voice channel';
+      throw "User not in voice channel";
     }
 
     this.connection = await this.voiceChannel.join();
@@ -44,8 +44,8 @@ export class Voice {
       const data = await polly
         .synthesizeSpeech({
           Text: text,
-          OutputFormat: 'mp3',
-          VoiceId: this.flags.pollyVoice || POLLY_VOICES[0] // default = Joanna
+          OutputFormat: "mp3",
+          VoiceId: this.flags.pollyVoice || POLLY_VOICES[0], // default = Joanna
         })
         .promise();
 
@@ -63,12 +63,12 @@ export class Voice {
 
       const dispatchers = this.connection.play(filename);
 
-      dispatchers.on('end', async () => {
+      dispatchers.on("end", async () => {
         await unlinkAsync(filename);
         resolve();
       });
 
-      dispatchers.on('error', reject);
+      dispatchers.on("error", reject);
     });
   }
 
@@ -78,8 +78,8 @@ export class Voice {
       const pcmStream = this.connection.receiver.createStream(
         this.message.author,
         {
-          mode: 'pcm',
-          end: 'silence'
+          mode: "pcm",
+          end: "silence",
         }
       );
 
@@ -87,32 +87,35 @@ export class Voice {
 
       // create the stream
       const recognizeStream = speechToText.recognizeUsingWebSocket({
-        model: 'en-US_BroadbandModel',
-        contentType: 'audio/l16;rate=48000;channels=2',
+        model: "en-US_BroadbandModel",
+        contentType: "audio/l16;rate=48000;channels=2",
         interimResults: true,
-        inactivityTimeout: -1
+        inactivityTimeout: -1,
       });
 
       await this.talk(`I'm Listening...`);
-      await this.playFileFromBucket('beep');
+      await this.playFileFromBucket("beep");
 
       pcmStream.pipe(recognizeStream);
 
-      this.message.channel.send('Listening...');
+      this.message.channel.send("Listening...");
 
-      pcmStream.on(
-        'data',
-        _.throttle(() => {
-          console.log('user is speaking');
-        }, 1000)
-      );
+      const throttledLog = _.throttle(() => {
+        getBotChannel(this.client).send(
+          `${this.message.author.username} is speaking...`
+        );
+      }, 1000);
 
-      pcmStream.on('error', () => {
-        console.log('uh oh!');
+      pcmStream.on("data", throttledLog);
+
+      pcmStream.on("error", () => {
+        console.log("uh oh!");
       });
 
-      pcmStream.on('close', () => {
-        console.log(`${this.message.author.username} is speaking...`);
+      pcmStream.on("close", () => {
+        getBotChannel(this.client).send(
+          `${this.message.author.username} is DONE speaking.`
+        );
       });
 
       // Backup timeout.
@@ -123,10 +126,10 @@ export class Voice {
       // // pipe in some audio
       // fs.createReadStream(__dirname + '/test.wav').pipe(recognizeStream);
 
-      recognizeStream.on('data', event => {
+      recognizeStream.on("data", event => {
         const text = event.toString();
 
-        onEvent('Data:', text);
+        onEvent("Data:", text);
 
         getBotChannel(this.client).send(
           `I heard ${this.message.author.username} say: ${text}`
@@ -139,15 +142,15 @@ export class Voice {
         resolve(text.trim());
       });
 
-      recognizeStream.on('error', event => {
-        onEvent('Error:', event);
-        getBotChannel(this.client).send('Error processing audio.');
+      recognizeStream.on("error", event => {
+        onEvent("Error:", event);
+        getBotChannel(this.client).send("Error processing audio.");
         reject();
       });
 
-      recognizeStream.on('close', event => {
-        onEvent('Close:', event);
-        getBotChannel(this.client).send('Watson exit.');
+      recognizeStream.on("close", event => {
+        onEvent("Close:", event);
+        getBotChannel(this.client).send("Watson exit.");
       });
 
       // Displays events on the console.
@@ -160,14 +163,14 @@ export class Voice {
   async playStreamFromUrl(url) {
     return new Promise(async (resolve, reject) => {
       const { data: stream } = await axios.get(url, {
-        responseType: 'stream',
-        headers: { 'content-type': 'audio/mpeg', accept: 'audio/mpeg' }
+        responseType: "stream",
+        headers: { "content-type": "audio/mpeg", accept: "audio/mpeg" },
       });
 
       const dispatcher = this.connection.play(stream);
 
-      dispatcher.on('end', resolve);
-      dispatcher.on('error', reject);
+      dispatcher.on("end", resolve);
+      dispatcher.on("error", reject);
     });
   }
 
