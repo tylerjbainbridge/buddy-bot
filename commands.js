@@ -17,7 +17,8 @@ export const commands = [
   new Command({
     trigger: 'hello|hi|hello robot',
     response: (_, meta) =>
-      `hey ${meta.message.author.username || ''}! im your bot bud`
+      `hey ${meta.message.author.username ||
+        ''}! my name is buddy bot...beep boop...haha`
   }),
 
   new Command({
