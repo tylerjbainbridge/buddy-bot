@@ -1,12 +1,12 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-import { postToJamieReddit } from './utils';
+import { postToJamieReddit } from './bot/utils';
 
-import { Command } from './classes/Command';
-import { Voice } from './classes/Voice';
+import { Command } from './bot/classes/Command';
+import { Voice } from './bot/classes/Voice';
 
-import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './config.js';
+import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD } from './bot/config.js';
 
 export const commands = [
   new Command({

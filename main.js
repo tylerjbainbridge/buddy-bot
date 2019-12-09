@@ -1,73 +1,51 @@
-import Discord from 'discord.js';
-import axios from 'axios';
-import moment from 'moment-timezone';
+import Discord from "discord.js";
+import axios from "axios";
+import moment from "moment-timezone";
 
-import { sleep, getBotChannel } from './bot/utils';
-import { handler } from './bot/handler';
+import { sleep, getBotChannel } from "./bot/utils";
+import { handler } from "./bot/handler";
 
-process.on('unhandledRejection', reason => {
-  console.log('Unhandled Rejection at:', reason.stack || reason);
+process.on("unhandledRejection", reason => {
+  console.log("Unhandled Rejection at:", reason.stack || reason);
 });
-
-const FIFTEEN_MINUTES = 900000;
-
-// Test
-// (async () => {
-//   // await handler()({
-//   //   content: 'bb say something',
-//   //   // Mocked discord API.
-//   //   channel: {
-//   //     send: console.log
-//   //   },
-//   //   react: () => {},
-//   //   author: {
-//   //     username: 'Bob'
-//   //   }
-//   // });
-
-//   process.exit();
-// })();
-
-export const BOT_TEST_CHANNEL_ID = '649013668373200929';
 
 export const client = new Discord.Client();
 
-// if (true) {
-if (process.env.NODE_ENV === 'production') {
+if (process.env.DYNO) {
   (async () => {
     while (true) {
       // Ping the heroku app every fifteen minutes to keep it from sleeping
       await sleep(FIFTEEN_MINUTES);
-      await axios.get('https://v-buddy-bot.herokuapp.com');
+      await axios.get("https://v-buddy-bot.herokuapp.com");
     }
   })();
-
-  client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}.`);
-
-    if (process.env.DYNO) {
-      const channel = getBotChannel(client);
-
-      const date = moment()
-        .tz('America/New_York')
-        .format('M/D/YYYY, h:mm:ss a');
-
-      channel.send(`beep boop BuddyBot updated (${date})`);
-
-      // Log when the script is shutting down.
-      process.on('SIGTERM', function() {
-        channel.send(`BuddyBot offline (updating)`);
-      });
-    }
-  });
-
-  client.on('message', handler(client));
-
-  client.login(process.env.TOKEN);
 }
 
-require('http')
+client.once("ready", () => {
+  console.log(`Logged in as ${client.user.tag}.`);
+
+  if (process.env.DYNO) {
+    const channel = getBotChannel(client);
+
+    const date = moment()
+      .tz("America/New_York")
+      .format("M/D/YYYY, h:mm:ss a");
+
+    channel.send(`beep boop BuddyBot updated (${date})`);
+
+    // Log when the script is shutting down.
+    process.on("SIGTERM", function() {
+      channel.send(`BuddyBot offline (updating)`);
+    });
+  }
+});
+
+client.on("message", handler(client));
+
+client.login(process.env.TOKEN);
+
+require("http")
   .createServer((_, response) => {
-    response.end('Hello :)');
+    response.end("Hello :)");
   })
   .listen(process.env.PORT || 3000);
