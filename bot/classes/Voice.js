@@ -57,7 +57,7 @@ export class Voice {
           .toString(36)
           .substring(2, 15);
 
-      const filename = `${__dirname}/temp/${id}.mp3`;
+      const filename = `./temp/${id}.mp3`;
 
       await writeFileAsync(filename, data.AudioStream);
 
