@@ -94,7 +94,7 @@ export class Command {
     if (nextInput === "help") {
       meta.message.channel.send(this.getHelp());
       return true;
-    } else if (this.useVoiceCommand || meta.voiceInstance) {
+    } else if (this.useVoiceCommand) {
       nextInput = await meta.voiceInstance.listen();
     }
 

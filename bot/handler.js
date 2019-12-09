@@ -19,17 +19,18 @@ const TRIGGERS = [
 export const handler = client => async message => {
   const { content } = message;
 
-  const root = new Command({
-    trigger: TRIGGERS.join("|"),
-    response: "command not found.",
-    commands,
-  });
-
   try {
     const { _: parts, ...flags } = minimist(content.split(" "), {
       string: ["pollyVoice"],
       boolean: ["silent", "talk", "voice"],
       alias: { s: "silent", p: "pollyVoice", t: "talk", v: "voice" },
+    });
+
+    const root = new Command({
+      trigger: TRIGGERS.join("|"),
+      response: "command not found.",
+      useVoiceCommand: flags.voice,
+      commands,
     });
 
     await root.run(parts.join(" "), {
