@@ -79,23 +79,19 @@ export class Command {
     const match = this.isMatch(input);
     if (!match) return false;
 
+    let nextInput = removeFromString(input, match);
+
     // Special case
     if (nextInput === 'help') {
       meta.message.channel.send(this.getHelp());
       return true;
-    }
-
-    let nextInput;
-
-    if (this.useVoice) {
+    } else if (this.useVoice) {
       if (!meta.voice) {
         meta.voice = new Voice(meta);
         await meta.voice.connect();
       }
 
       nextInput = await meta.voice.listen();
-    } else {
-      nextInput = removeFromString(input, match);
     }
 
     // Check if any sub commands were matches
