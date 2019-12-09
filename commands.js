@@ -6,7 +6,12 @@ import { postToJamieReddit, removeFromString } from './bot/utils';
 import { Command } from './bot/classes/Command';
 import { Voice } from './bot/classes/Voice';
 
-import { reddit, WEATHER_APP_ID, BUDS_WITHOUT_COD, POLLY_VOICES } from './bot/config.js';
+import {
+  reddit,
+  WEATHER_APP_ID,
+  BUDS_WITHOUT_COD,
+  POLLY_VOICES
+} from './bot/config.js';
 
 export const commands = [
   new Command({
@@ -46,8 +51,8 @@ export const commands = [
   }),
 
   new Command({
-    trigger: "list voices",
-    response: POLLY_VOICES.map((voice) => `\`${voice}\``).join('\n')
+    trigger: 'list voices',
+    response: POLLY_VOICES.map(voice => `\`${voice}\``).join('\n')
   }),
 
   new Command({
@@ -68,7 +73,9 @@ export const commands = [
         .getSubreddit('thingsjamiehassaid')
         .getRandomSubmission();
 
-      return removeFromString(submission.title, ' - Jamie');
+      return [' - Jamie', '- Jamie'].reduce((p, c) => {
+        return removeFromString(p, c);
+      }, await submission.title);
     },
     commands: [
       new Command({
