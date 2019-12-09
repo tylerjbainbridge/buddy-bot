@@ -46,7 +46,7 @@ export const commands = [
   }),
 
   new Command({
-    trigger: "pollyVoiceOptions",
+    trigger: "list voices",
     response: POLLY_VOICES.map((voice) => `\`${voice}\``).join('\n')
   }),
 
