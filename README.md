@@ -27,3 +27,5 @@ new Command({
   ]
 });
 ```
+
+Note: ./temp is for storing temporary audio files- do not delete.
