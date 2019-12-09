@@ -208,7 +208,7 @@ export const commands = [
 
   new Command({
     trigger: 'voice',
-    useVoice: true,
+    useVoiceCommand: true,
     response: 'beep boop, i dont understand',
     commands: [
       new Command({

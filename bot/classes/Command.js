@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import { removeFromString } from '../utils';
-import { Voice } from './Voice';
+import _ from "lodash";
+import { removeFromString } from "../utils";
+import { Voice } from "./Voice";
 
 // const command = new Command({
 //   trigger: 'list|ls',
@@ -33,16 +33,16 @@ export class Command {
     action,
 
     // Initialize a voice connection and respond via voice
-    useVoice,
+    useVoiceCommand,
 
     // sub commands for ths resolver
-    commands
+    commands,
   }) {
     this.trigger = trigger;
     this.description = description;
     this.response = response;
     this.action = action;
-    this.useVoice = useVoice;
+    this.useVoiceCommand = useVoiceCommand;
     this.commands = commands;
 
     this.run = this.run.bind(this);
@@ -50,9 +50,9 @@ export class Command {
 
   getHelp(level = 0) {
     const help =
-      `${_.times(level * 2, () => '- ').join('')}\`${this.trigger}\`${
-        this.description ? `: ${this.description}` : ''
-      }` + '\n';
+      `${_.times(level * 2, () => "- ").join("")}\`${this.trigger}\`${
+        this.description ? `: ${this.description}` : ""
+      }` + "\n";
 
     if (this.commands && this.commands.length) {
       return this.commands.reduce((p, c) => (p += c.getHelp(level + 1)), help);
@@ -67,8 +67,9 @@ export class Command {
   isMatch(input) {
     const sanitized = input.toLowerCase().trim();
 
-    return this.trigger.toLowerCase()
-      .split('|')
+    return this.trigger
+      .toLowerCase()
+      .split("|")
       .find(option => sanitized.startsWith(option));
   }
 
@@ -83,16 +84,17 @@ export class Command {
 
     let nextInput = removeFromString(input, match);
 
+    // Initialize foice
+    if ((this.useVoiceCommand || meta.flags.voice) && !meta.voice) {
+      meta.voice = new Voice(meta);
+      await meta.voice.connect();
+    }
+
     // Special case
-    if (nextInput === 'help') {
+    if (nextInput === "help") {
       meta.message.channel.send(this.getHelp());
       return true;
-    } else if (this.useVoice) {
-      if (!meta.voice) {
-        meta.voice = new Voice(meta);
-        await meta.voice.connect();
-      }
-
+    } else if (this.useVoiceCommand) {
       nextInput = await meta.voice.listen();
     }
 
@@ -114,7 +116,7 @@ export class Command {
         ? this.response
         : await this.response(nextInput, meta);
 
-      if (meta.flags.voice || meta.voice) {
+      if (meta.flags.talk || meta.voice) {
         await meta.voice.talk(content);
       } else {
         meta.message.channel.send(content);
