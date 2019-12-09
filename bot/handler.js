@@ -21,7 +21,7 @@ export const handler = client => async message => {
 
   try {
     const { _: parts, ...flags } = minimist(content.split(" "), {
-      string: ["pollyVoice"],
+      string: ["pollyVoice", "voiceTest"],
       boolean: ["silent", "talk", "voice"],
       alias: { s: "silent", p: "pollyVoice", t: "talk", v: "voice" },
     });
@@ -33,7 +33,9 @@ export const handler = client => async message => {
       commands,
     });
 
-    await root.run(parts.join(" "), {
+    const input = parts.join(" ");
+
+    await root.run(input, {
       message,
       client,
       flags,
