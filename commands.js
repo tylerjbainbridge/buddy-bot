@@ -1,7 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-import { postToJamieReddit } from './bot/utils';
+import { postToJamieReddit, removeFromString } from './bot/utils';
 
 import { Command } from './bot/classes/Command';
 import { Voice } from './bot/classes/Voice';
@@ -68,7 +68,7 @@ export const commands = [
         .getSubreddit('thingsjamiehassaid')
         .getRandomSubmission();
 
-      return submission.title;
+      return removeFromString(submission.title, ' - Jamie');
     },
     commands: [
       new Command({
