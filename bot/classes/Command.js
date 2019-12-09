@@ -79,6 +79,12 @@ export class Command {
     const match = this.isMatch(input);
     if (!match) return false;
 
+    // Special case
+    if (nextInput === 'help') {
+      meta.message.channel.send(this.getHelp());
+      return true;
+    }
+
     let nextInput;
 
     if (this.useVoice) {
@@ -90,12 +96,6 @@ export class Command {
       nextInput = await meta.voice.listen();
     } else {
       nextInput = removeFromString(input, match);
-    }
-
-    // Special case
-    if (nextInput === 'help') {
-      meta.message.channel.send(this.getHelp());
-      return true;
     }
 
     // Check if any sub commands were matches
