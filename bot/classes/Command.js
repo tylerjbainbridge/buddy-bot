@@ -65,9 +65,11 @@ export class Command {
    * Returns the exact match string
    */
   isMatch(input) {
-    return this.trigger
+    const sanitized = input.toLowerCase().trim();
+
+    return this.trigger.toLowerCase()
       .split('|')
-      .find(option => input.trim().startsWith(option));
+      .find(option => sanitized.startsWith(option));
   }
 
   /**
