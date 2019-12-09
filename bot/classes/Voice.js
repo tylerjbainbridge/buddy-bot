@@ -74,6 +74,8 @@ export class Voice {
 
   async listen() {
     return new Promise(async (resolve, reject) => {
+      console.log('bot', this.users.findByUsername('buddy-bot'));
+
       // 16-bit signed PCM, stereo 48KHz stream
       const pcmStream = this.connection.receiver.createStream(
         this.flags.voiceTest ? this.users.findByUsername('buddy-bot') : this.message.author,
@@ -98,11 +100,12 @@ export class Voice {
 
       pcmStream.pipe(recognizeStream);
 
+      this.message.channel.send("Listening...");
+
+
       if (this.flags.voiceTest) {
         await this.talk(this.flags.voiceTest);
       }
-
-      this.message.channel.send("Listening...");
 
       const throttledLog = _.throttle(() => {
         getBotChannel(this.client).send(
