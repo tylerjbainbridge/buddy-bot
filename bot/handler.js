@@ -17,7 +17,7 @@ const TRIGGERS = [
 ];
 
 export const handler = client => async message => {
-  const content = message.content.toLowerCase();
+  const { content } = message;
 
   const root = new Command({
     trigger: TRIGGERS.join("|"),
@@ -32,7 +32,7 @@ export const handler = client => async message => {
       alias: { s: "silent" },
     });
 
-    await root.run(parts.join(" "), {
+    await root.run(parts.join(" ").toLowerCase(), {
       message,
       client,
       flags,
