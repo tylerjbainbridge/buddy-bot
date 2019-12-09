@@ -36,6 +36,7 @@ export const BUDS_WITHOUT_COD = ["jam"];
 export const BOT_TEST_CHANNEL_ID = "649013668373200929";
 
 export const POLLY_VOICES = [
+  'Justin',
   'Nicole',
   'Enrique',
   'Tatyana',
@@ -72,7 +73,6 @@ export const POLLY_VOICES = [
   'Zeina',
   'Miguel',
   'Mathieu',
-  'Justin',
   'Lucia',
   'Jacek',
   'Bianca',
