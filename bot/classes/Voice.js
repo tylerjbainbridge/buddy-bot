@@ -2,13 +2,12 @@ import axios from 'axios';
 import { promisify } from 'util';
 import fs from 'fs';
 import _ from 'lodash';
-import minimist from 'minimist';
 
 const unlinkAsync = promisify(fs.unlink);
 const writeFileAsync = promisify(fs.writeFile);
 
-import { polly, speechToText } from './config';
-import { getBotChannel } from './utils';
+import { polly, speechToText } from '../config';
+import { getBotChannel } from '../utils';
 
 export class Voice {
   constructor(meta) {
@@ -20,10 +19,10 @@ export class Voice {
   }
 
   async connect(channel) {
-    this.voiceChannel = channel || this.msg.member.voice.channel;
+    this.voiceChannel = channel || this.message.member.voice.channel;
 
     if (!this.voiceChannel) {
-      this.msg.channel.send(`Join a voice channel and try again`);
+      this.message.channel.send(`Join a voice channel and try again`);
       throw 'User not in voice channel';
     }
 
@@ -39,6 +38,8 @@ export class Voice {
   async talk(text) {
     return new Promise(async (resolve, reject) => {
       if (this.flags.silent) return resolve();
+
+      getBotChannel(this.client).send(`Saying: ${text}`);
 
       const data = await polly
         .synthesizeSpeech({
@@ -74,10 +75,13 @@ export class Voice {
   async listen() {
     return new Promise(async (resolve, reject) => {
       // 16-bit signed PCM, stereo 48KHz stream
-      const pcmStream = this.connection.receiver.createStream(this.msg.author, {
-        mode: 'pcm',
-        end: 'silence'
-      });
+      const pcmStream = this.connection.receiver.createStream(
+        this.message.author,
+        {
+          mode: 'pcm',
+          end: 'silence'
+        }
+      );
 
       // pcmStream.pipe(fs.createWriteStream(__dirname + `/${Date.now()}.pcm`));
 
@@ -94,7 +98,7 @@ export class Voice {
 
       pcmStream.pipe(recognizeStream);
 
-      this.msg.channel.send('Listening...');
+      this.message.channel.send('Listening...');
 
       pcmStream.on(
         'data',
@@ -108,7 +112,7 @@ export class Voice {
       });
 
       pcmStream.on('close', () => {
-        console.log('user is done speaking');
+        console.log(`${this.message.author.username} is speaking...`);
       });
 
       // Backup timeout.
@@ -125,7 +129,7 @@ export class Voice {
         onEvent('Data:', text);
 
         getBotChannel(this.client).send(
-          `I heard ${this.msg.author.username} say: ${text}`
+          `I heard ${this.message.author.username} say: ${text}`
         );
 
         // Cleanup

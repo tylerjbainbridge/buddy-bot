@@ -1,10 +1,10 @@
-import { resolvers } from './resolvers';
-import {
-  getResolver,
-  getMessageFromResolver,
-  removeFromString,
-  postToJamieReddit
-} from './utils';
+import { Command } from './classes/Command';
+import { commands } from './commands';
+import minimist from 'minimist';
+
+import { Users } from './classes/Users';
+
+import { postToJamieReddit } from './utils';
 
 const TRIGGERS = [
   'bot',
@@ -16,61 +16,35 @@ const TRIGGERS = [
   'bb'
 ];
 
-const resolverKeys = Object.keys(resolvers);
+export const handler = client => async message => {
+  const input = message.content.toLowerCase();
 
-export const handler = client => async msg => {
-  const trigger = TRIGGERS.find(trigger =>
-    msg.content.toLowerCase().startsWith(trigger)
-  );
+  const root = new Command({
+    trigger: TRIGGERS.join('|'),
+    message: 'command not found.',
+    commands
+  });
 
   try {
-    // Skip if not relevant
-    if (trigger) {
-      const command = removeFromString(msg.content, trigger);
-
-      let responseMessage = '';
-
-      // Help menu
-      if (msg.content.includes('triggers')) {
-        responseMessage = `I respond to\n${TRIGGERS.map(
-          key => `\`${key}\``
-        ).join('\n')}`;
-      } else if (msg.content.includes('help')) {
-        responseMessage = `Here are the commands I support :)\n${resolverKeys
-          .map(key => `\`${key}\``)
-          .join('\n')}`;
-      } else {
-        const match = getResolver(resolvers, command);
-
-        if (match) {
-          await msg.react('😃');
-
-          responseMessage = await getMessageFromResolver(resolvers, match, {
-            msg,
-            client,
-            trigger,
-            match
-          });
-        } else {
-          await msg.react('🤔');
-          await msg.channel.send('command not recognized :(');
-        }
-      }
-
-      if (responseMessage) {
-        await msg.channel.send(responseMessage);
-      }
-    }
+    await root.run(input, {
+      message,
+      client,
+      users: new Users({ client, message }),
+      flags: minimist(input.split(' '), {
+        boolean: ['silent'],
+        alias: { s: 'silent' }
+      })
+    });
   } catch (e) {
     console.log(e);
-    await msg.react('😢');
-    await msg.channel.send('something went wrong :(');
+    await message.react('😢');
+    await message.channel.send('something went wrong :(');
   }
 
-  if (['tyler', 'jam'].includes(msg.author.username.toLowerCase())) {
+  if (['tyler', 'jam'].includes(message.author.username.toLowerCase())) {
     const ONE_HOUR = 3600000;
 
-    const collector = msg.createReactionCollector(
+    const collector = message.createReactionCollector(
       (reaction, user) => {
         console.log('reaction!', user.username, reaction.emoji.name);
         return ['😇'].includes(reaction.emoji.name);
@@ -79,8 +53,8 @@ export const handler = client => async msg => {
     );
 
     collector.on('collect', async r => {
-      const url = await postToJamieReddit(msg.content);
-      msg.channel.send(`> ${msg.content}\n${url}`);
+      const url = await postToJamieReddit(message.content);
+      message.channel.send(`> ${message.content}\n${url}`);
       collector.stop();
     });
   }

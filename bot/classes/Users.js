@@ -18,6 +18,8 @@ export class Users {
   }
 
   getBatchUserMention() {
-    return this.client.users.map(user => `${this.getUserMentionSring(user)}\n`);
+    return this.client.users
+      .map(user => this.getUserMentionSring(user))
+      .join('\n');
   }
 }
