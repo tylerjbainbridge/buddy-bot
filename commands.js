@@ -205,12 +205,12 @@ export const commands = [
 
   new Command({
     trigger: 'say',
-    action: async (text, meta) => {
+    action: async (input, meta) => {
       const voice = new Voice(meta);
 
       await voice.connect();
 
-      await voice.talk(text);
+      await voice.talk(input);
     }
   }),
 

@@ -27,6 +27,9 @@ export class Voice {
     }
 
     this.connection = await this.voiceChannel.join();
+
+    // Blanket catch all
+    this.connection.on('error', console.error);
   }
 
   leave() {

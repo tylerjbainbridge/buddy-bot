@@ -28,19 +28,25 @@ export const handler = client => async message => {
 
     const root = new Command({
       trigger: TRIGGERS.join('|'),
-      response: 'command not found.',
+      action: async (_, meta) => {
+        await meta.message.react('🤔');
+      },
       useVoiceCommand: flags.voice,
       commands
     });
 
     const input = parts.join(' ');
-
-    await root.run(input, {
+    
+    const success = await root.run(input, {
       message,
       client,
       flags,
       users: new Users({ client, message })
     });
+    
+    if (success) {
+      await message.react('🤖');
+    }
   } catch (e) {
     console.log(e);
     await message.react('😢');

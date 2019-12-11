@@ -46,6 +46,8 @@ client.once("ready", () => {
 
 client.on("message", handler(client));
 
+client.on('error', console.error);
+
 client.login(process.env.TOKEN);
 
 require("http")

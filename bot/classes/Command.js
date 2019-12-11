@@ -67,10 +67,13 @@ export class Command {
   isMatch(input) {
     const sanitized = input.toLowerCase().trim();
 
+    const words = sanitized.toLowerCase().split(' ');
+    const firstWord = words.pop().trim();
+
     return this.trigger
       .toLowerCase()
       .split("|")
-      .find(option => sanitized.startsWith(option));
+      .find(option => firstWord === option);
   }
 
   /**
@@ -81,6 +84,8 @@ export class Command {
   async run(input, meta) {
     const match = this.isMatch(input);
     if (!match) return false;
+
+    console.log(match)
 
     let nextInput = removeFromString(input, match);
 
