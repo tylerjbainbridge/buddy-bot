@@ -5,6 +5,7 @@ import minimist from "minimist";
 import { Users } from "./classes/Users";
 
 import { postToJamieReddit } from "./utils";
+import { Store } from "./classes/Store";
 
 const TRIGGERS = [
   "bot",
@@ -16,8 +17,8 @@ const TRIGGERS = [
   "bb",
 ];
 
-export const handler = client => async message => {
-  const { content } = message;
+export const handler = (client, photon) => async message => {
+  const { content, author, guild } = message;
 
   try {
     const { _: parts, ...flags } = minimist(content.split(" "), {
@@ -37,16 +38,17 @@ export const handler = client => async message => {
 
     const input = parts.join(" ");
 
-    const success = await root.run(
-      input,
-      {
-        message,
-        client,
-        flags,
-        users: new Users({ client, message }),
-      },
-      { isStrict: true }
-    );
+    const meta = {
+      message,
+      client,
+      flags,
+      photon,
+    };
+
+    meta.users = new Users(meta);
+    meta.store = new Store(meta);
+
+    const success = await root.run(input, meta, { isStrict: true });
 
     if (success) {
       await message.react("🤖");

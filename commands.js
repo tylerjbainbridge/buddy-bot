@@ -17,8 +17,11 @@ export const commands = [
   new Command({
     trigger: "hello|hi|hello robot",
     response: (_, meta) =>
-      `hey ${meta.message.author.username ||
-        ""}! my name is buddy bot...beep boop...haha`,
+      _.sample([
+        `hey ${meta.message.author.username ||
+          ""}! my name is buddy bot...beep boop...haha`,
+        "hello human",
+      ]),
   }),
 
   new Command({
@@ -34,6 +37,11 @@ export const commands = [
   new Command({
     trigger: "home|house|github|gh|The Hub",
     response: `it's public ;)`,
+  }),
+
+  new Command({
+    trigger: "sing your song",
+    response: "buddy boy buddy boy whatcha gonna do when they come for u!",
   }),
 
   new Command({
@@ -148,6 +156,9 @@ export const commands = [
 
   new Command({
     trigger: "fun fact|funfact",
+    flags: {
+      pollyVoice: "Ivy",
+    },
     response: async () => {
       const { data } = await axios.get("http://numbersapi.com/random");
 
@@ -215,20 +226,27 @@ export const commands = [
   }),
 
   new Command({
-    trigger: "voice",
-    useVoiceCommand: true,
-    response: "beep boop, i dont understand",
-    commands: [
-      new Command({
-        trigger: "hello robot",
-        response: "hello human",
-      }),
-      new Command({
-        trigger: "play corner",
-        action: async (_, meta) => {
-          await meta.voiceInstance.playFileFromBucket("corner");
-        },
-      }),
-    ],
-  }),
+    trigger: 'sync guild',
+    action: async (input, meta) => {
+      await meta.store.syncGuild();
+    }
+  })
+
+  // new Command({
+  //   trigger: "voice",
+  //   useVoiceCommand: true,
+  //   response: "beep boop, i dont understand",
+  //   commands: [
+  //     new Command({
+  //       trigger: "hello robot",
+  //       response: "hello human",
+  //     }),
+  //     new Command({
+  //       trigger: "play corner",
+  //       action: async (_, meta) => {
+  //         await meta.voiceInstance.playFileFromBucket("corner");
+  //       },
+  //     }),
+  //   ],
+  // }),
 ];

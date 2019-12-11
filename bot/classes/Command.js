@@ -29,14 +29,17 @@ export class Command {
 
     // Function or string indicating a message response
     response,
-    // function or string to run
+    // Function to run (doesnt need to return anything) - used for manual actions
     action,
 
     // Initialize a voice connection and respond via voice
     useVoiceCommand,
 
-    // sub commands for ths resolver
+    // Sub commands for ths resolver
     commands,
+
+    // Forced flags
+    flags,
   }) {
     this.trigger = trigger;
     this.description = description;
@@ -44,6 +47,7 @@ export class Command {
     this.action = action;
     this.useVoiceCommand = useVoiceCommand;
     this.commands = commands;
+    this.flags = flags || {};
 
     this.run = this.run.bind(this);
   }
@@ -69,9 +73,9 @@ export class Command {
 
     let matchFunc = option => sanitized.startsWith(option);
 
+    // Strict matching only matches on the first word.
     if (isStrict) {
       const words = sanitized.split(" ");
-
       const matchWord = words.shift().trim();
 
       matchFunc = option => matchWord === option;
@@ -88,11 +92,18 @@ export class Command {
    * @param {*} input
    * @param {*} metas
    */
-  async run(input, meta, { isStrict = false } = {}) {
+  async run(input, initialMeta, { isStrict = false } = {}) {
     const match = this.isMatch(input, isStrict);
     if (!match) return false;
 
-    console.log(match);
+    const meta = {
+      ...initialMeta,
+      flags: {
+        ...this.flags,
+        // User specified strings take priority.
+        ...initialMeta.flags,
+      },
+    };
 
     let nextInput = removeFromString(input, match);
 

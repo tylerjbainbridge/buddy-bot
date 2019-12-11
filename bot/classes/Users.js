@@ -4,13 +4,13 @@ export class Users {
   }
 
   findByUsername(username) {
-    return this.client.users.find(
-      user => user.username.toLowerCase() === username.toLowerCase()
+    return this.message.guild.members.find(
+      ({ user }) => user.username.toLowerCase() === username.toLowerCase()
     );
   }
 
   filterOutBots() {
-    return this.client.users.filter(({ bot }) => !bot);
+    return this.message.guild.members.filter(({ user }) => !user.bot);
   }
 
   getUserMention(user) {
@@ -18,6 +18,8 @@ export class Users {
   }
 
   getBatchUserMention() {
-    return this.client.users.map(user => this.getUserMention(user)).join('\n');
+    return this.message.guild.members
+      .map(({ user }) => this.getUserMention(user))
+      .join("\n");
   }
 }

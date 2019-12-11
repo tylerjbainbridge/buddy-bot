@@ -2,9 +2,11 @@
   "main": "index.js",
   "module": "main.js",
   "scripts": {
-    "start": "node -r dotenv/config -r esm main.js"
+    "start": "node -r dotenv/config -r esm main.js",
+    "dev": "npx nodemon -r dotenv/config -r esm main.js"
   },
   "dependencies": {
+    "@prisma/photon": "^2.0.0-preview018.1",
     "aws-sdk": "^2.585.0",
     "axios": "^0.19.0",
     "discord.js": "github:discordjs/discord.js#master",
@@ -16,6 +18,8 @@
     "moment": "2.24.0",
     "moment-timezone": "0.5.27",
     "node-opus": "^0.3.3",
+    "nodemon": "^2.0.2",
+    "prisma2": "2.0.0-preview018.1",
     "snoowrap": "1.20.1"
   },
   "engines": {

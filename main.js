@@ -6,6 +6,7 @@ import moment from "moment-timezone";
 
 import { sleep, getBotChannel } from "./bot/utils";
 import { handler } from "./bot/handler";
+import { photon } from "./bot/config";
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -25,7 +26,7 @@ if (process.env.DYNO) {
   })();
 }
 
-client.once("ready", () => {
+client.once("ready", async () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
   if (process.env.DYNO) {
@@ -44,7 +45,7 @@ client.once("ready", () => {
   }
 });
 
-client.on("message", handler(client));
+client.on("message", handler(client, photon));
 
 client.on("error", console.error);
 
