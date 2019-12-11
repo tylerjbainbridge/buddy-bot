@@ -64,17 +64,23 @@ export class Command {
   /**
    * Returns the exact match string
    */
-  isMatch(input) {
+  isMatch(input, isStrict = false) {
     const sanitized = input.toLowerCase().trim();
 
-    const words = sanitized.toLowerCase().split(' ');
+    let matchFunc = option => sanitized.startsWith(option);
 
-    const firstWord = words.shift();
+    if (isStrict) {
+      const words = sanitized.split(" ");
+
+      const matchWord = words.shift().trim();
+
+      matchFunc = option => matchWord === option;
+    }
 
     return this.trigger
       .toLowerCase()
       .split("|")
-      .find(option => firstWord === option);
+      .find(matchFunc);
   }
 
   /**
@@ -82,16 +88,19 @@ export class Command {
    * @param {*} input
    * @param {*} metas
    */
-  async run(input, meta) {
-    const match = this.isMatch(input);
+  async run(input, meta, { isStrict = false } = {}) {
+    const match = this.isMatch(input, isStrict);
     if (!match) return false;
 
-    console.log(match)
+    console.log(match);
 
     let nextInput = removeFromString(input, match);
 
     // Initialize foice
-    if ((this.useVoiceCommand || meta.flags.talk || meta.flags.voice) && !meta.voiceInstance) {
+    if (
+      (this.useVoiceCommand || meta.flags.talk || meta.flags.voice) &&
+      !meta.voiceInstance
+    ) {
       meta.voiceInstance = new Voice(meta);
       await meta.voiceInstance.connect();
     }

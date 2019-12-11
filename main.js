@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 import Discord from "discord.js";
 import axios from "axios";
@@ -46,7 +46,7 @@ client.once("ready", () => {
 
 client.on("message", handler(client));
 
-client.on('error', console.error);
+client.on("error", console.error);
 
 client.login(process.env.TOKEN);
 
