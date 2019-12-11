@@ -1,3 +1,5 @@
+import shortid from "shortid";
+
 export class Store {
   constructor(meta) {
     Object.assign(this, meta);
@@ -5,6 +7,8 @@ export class Store {
 
   async syncGuild() {
     const members = [...this.users.filterOutBots().values()];
+
+    this.message.channel.send("Syncing...");
 
     const { id: guildId, name: guildName } = this.message.guild;
 
@@ -29,6 +33,7 @@ export class Store {
       let user = await this.photon.users.findOne({
         where: {
           id: member.id,
+          username: member.username,
         },
       });
 
@@ -44,6 +49,41 @@ export class Store {
           },
         });
       }
+    }
+
+    this.message.channel.send("Done");
+  }
+
+  async addCommandToGuild(trigger, response) {
+    const {
+      user,
+      guild: { id: guildId, name: guildName },
+    } = this.message.guild;
+
+    let [command] = await this.photon.commands.findMany({
+      where: {
+        trigger,
+      },
+    });
+
+    if (!command) {
+      command = await this.photon.commands.create({
+        data: {
+          id: shortid(),
+          response,
+          trigger,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          guild: {
+            connect: {
+              id: guildId,
+            },
+          },
+        },
+      });
     }
   }
 }

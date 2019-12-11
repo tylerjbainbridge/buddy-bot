@@ -156,7 +156,7 @@ export const commands = [
 
   new Command({
     trigger: "fun fact|funfact",
-    flags: {
+    flagValues: {
       pollyVoice: "Ivy",
     },
     response: async () => {
@@ -226,11 +226,28 @@ export const commands = [
   }),
 
   new Command({
-    trigger: 'sync guild',
-    action: async (input, meta) => {
-      await meta.store.syncGuild();
-    }
-  })
+    trigger: "guild",
+    commands: [
+      new Command({
+        trigger: "sync",
+        action: async (input, meta) => {
+          await meta.store.syncGuild();
+        },
+      }),
+
+      new Command({
+        trigger: "add command",
+        flags: {
+          string: ["trigger", "response"],
+        },
+        action: async (input, meta) => {
+          console.log(meta.flags);
+          
+          // await meta.store.addCommandToGuild(meta.flags.trigger, meta.flags.response);
+        },
+      }),
+    ],
+  }),
 
   // new Command({
   //   trigger: "voice",

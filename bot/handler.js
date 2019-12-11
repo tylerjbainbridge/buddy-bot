@@ -4,24 +4,19 @@ import minimist from "minimist";
 
 import { Users } from "./classes/Users";
 
-import { postToJamieReddit } from "./utils";
+import { postToJamieReddit, getFlags } from "./utils";
 import { Store } from "./classes/Store";
 
-const TRIGGERS = [
-  "bot",
-  "robot",
-  "alexa",
-  "rb",
-  "roomiobot",
-  "buddy bot",
-  "bb",
-];
+const TRIGGERS =
+  process.env.NODE_ENV === "production"
+    ? ["bot", "robot", "alexa", "rb", "roomiobot", "buddy bot", "bb"]
+    : ["test"];
 
 export const handler = (client, photon) => async message => {
-  const { content, author, guild } = message;
+  const { content } = message;
 
   try {
-    const { _: parts, ...flags } = minimist(content.split(" "), {
+    const { remaining: input, flags } = getFlags(content, {
       string: ["pollyVoice"],
       boolean: ["silent", "talk", "voice"],
       alias: { s: "silent", p: "pollyVoice", t: "talk", v: "voice" },
@@ -35,8 +30,6 @@ export const handler = (client, photon) => async message => {
       useVoiceCommand: flags.voice,
       commands,
     });
-
-    const input = parts.join(" ");
 
     const meta = {
       message,

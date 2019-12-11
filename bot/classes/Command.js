@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { removeFromString } from "../utils";
+import { removeFromString, getFlags } from "../utils";
 import { Voice } from "./Voice";
 
 // const command = new Command({
@@ -38,8 +38,11 @@ export class Command {
     // Sub commands for ths resolver
     commands,
 
-    // Forced flags
+    // Flags for this command
     flags,
+
+    // Forced flags
+    flagValues,
   }) {
     this.trigger = trigger;
     this.description = description;
@@ -47,7 +50,8 @@ export class Command {
     this.action = action;
     this.useVoiceCommand = useVoiceCommand;
     this.commands = commands;
-    this.flags = flags || {};
+    this.flags = flags;
+    this.flagValues = flagValues || {};
 
     this.run = this.run.bind(this);
   }
@@ -99,13 +103,20 @@ export class Command {
     const meta = {
       ...initialMeta,
       flags: {
-        ...this.flags,
+        ...this.flagValues,
         // User specified strings take priority.
         ...initialMeta.flags,
       },
     };
 
     let nextInput = removeFromString(input, match);
+
+    if (this.flags) {
+      const { remaining, flags } = getFlags(nextInput, this.flags);
+
+      meta.flags = { ...meta.flags, ...flags };
+      nextInput = removeFromString(remaining, match);
+    }
 
     // Initialize foice
     if (

@@ -44,6 +44,8 @@ model Command {
 model User {
     id String @id
 
+    username String
+
     guild Guild
     commands Command[]
 
