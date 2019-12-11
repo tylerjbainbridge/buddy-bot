@@ -68,7 +68,8 @@ export class Command {
     const sanitized = input.toLowerCase().trim();
 
     const words = sanitized.toLowerCase().split(' ');
-    const firstWord = words.pop().trim();
+
+    const firstWord = words.shift();
 
     return this.trigger
       .toLowerCase()
