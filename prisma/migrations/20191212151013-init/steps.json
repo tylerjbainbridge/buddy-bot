@@ -42,6 +42,13 @@
     {
       "stepType": "CreateField",
       "model": "Guild",
+      "field": "reminders",
+      "type": "Reminder",
+      "arity": "list"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Guild",
       "field": "createdAt",
       "type": "DateTime",
       "arity": "required"
@@ -70,6 +77,92 @@
     {
       "stepType": "CreateDirective",
       "model": "Guild",
+      "field": "updatedAt",
+      "directive": "updatedAt"
+    },
+    {
+      "stepType": "CreateModel",
+      "model": "Reminder"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "id",
+      "type": "String",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateDirective",
+      "model": "Reminder",
+      "field": "id",
+      "directive": "id"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "content",
+      "type": "String",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "user",
+      "type": "User",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "guild",
+      "type": "Guild",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "isDone",
+      "type": "Boolean",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "remindAt",
+      "type": "DateTime",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateDirective",
+      "model": "Reminder",
+      "field": "createdAt",
+      "directive": "default"
+    },
+    {
+      "stepType": "CreateDirectiveArgument",
+      "model": "Reminder",
+      "field": "createdAt",
+      "directive": "default",
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateDirective",
+      "model": "Reminder",
       "field": "updatedAt",
       "directive": "updatedAt"
     },
@@ -230,6 +323,13 @@
     {
       "stepType": "CreateField",
       "model": "User",
+      "field": "username",
+      "type": "String",
+      "arity": "required"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "User",
       "field": "guild",
       "type": "Guild",
       "arity": "required"
@@ -240,6 +340,13 @@
       "field": "commands",
       "type": "Command",
       "arity": "list"
+    },
+    {
+      "stepType": "CreateField",
+      "model": "User",
+      "field": "timezone",
+      "type": "String",
+      "arity": "required"
     },
     {
       "stepType": "CreateField",

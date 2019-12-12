@@ -3,4 +3,7 @@
 # lift lockfile v1
 # Read more about conflict resolution here: TODO
 
-20191211151844-init
+20191212151013-init
+20191212151524-optional-timezone
+20191212151622-is-done-default
+20191212154627-add-message-reference

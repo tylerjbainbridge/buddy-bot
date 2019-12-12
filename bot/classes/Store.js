@@ -1,74 +1,156 @@
-import shortid from 'shortid';
+import shortid from "shortid";
+import chrono from "chrono-node";
+import moment from "moment-timezone";
+
+import { Command } from "./Command";
+import { removeFromString } from "../utils";
 
 export class Store {
   constructor(meta) {
-    Object.assign(this, meta);
+    Object.assign(this, meta || {});
   }
 
-  async syncGuild() {
-    const members = [...this.users.filterOutBots().values()];
+  async checkIfUserExistsAndCreateIfNot({ id, username }, { id: guildId }) {
+    let user = await this.photon.users.findOne({
+      where: {
+        id,
+      },
+    });
 
-    this.message.channel.send('Syncing...');
+    if (!user) {
+      user = await this.photon.users.create({
+        data: {
+          id,
+          username,
+          guild: {
+            connect: {
+              id: guildId,
+            },
+          },
+        },
+      });
+    }
 
-    const { id: guildId, name: guildName } = this.message.guild;
+    return user;
+  }
 
+  async checkIfGuildExistsAndCreateIfNot({ id: guildId, name: guildName }) {
     let guild = await this.photon.guilds.findOne({
       where: {
-        id: guildId
-      }
+        id: guildId,
+      },
     });
 
     if (!guild) {
       guild = await this.photon.guilds.create({
         data: {
           id: guildId,
-          name: guildName
-        }
+          name: guildName,
+        },
       });
     }
+
+    return guild;
+  }
+
+  async getPastDueReminders() {
+    return await this.photon.reminders.findMany({
+      where: {
+        isDone: false,
+        remindAt: {
+          lt: new Date(),
+        },
+      },
+      include: { guild: true, user: true },
+    });
+  }
+
+  async completeReminder(reminder) {
+    return await this.photon.reminders.update({
+      where: {
+        id: reminder.id,
+      },
+      data: {
+        isDone: true,
+      },
+    });
+  }
+
+  async addReminder(dateStr) {
+    await this.checkIfGuildExistsAndCreateIfNot(this.message.guild);
+    await this.checkIfUserExistsAndCreateIfNot(
+      this.message.author,
+      this.message.guild
+    );
+
+    const offset = moment()
+      .tz("America/New_York")
+      .utcOffset();
+
+    const parsedDate = chrono.parse(dateStr);
+
+    parsedDate[0].start.assign("timezoneOffset", offset);
+
+    const relativeDateStr = moment(parsedDate[0].start.date())
+      .tz("America/New_York")
+      .calendar();
+
+    const content = removeFromString(dateStr, parsedDate[0].text);
+
+    await this.photon.reminders.create({
+      data: {
+        id: shortid(),
+        content,
+        remindAt: new Date(
+          moment(parsedDate[0].start.date())
+            .utc()
+            .format()
+        ),
+        isDone: false,
+        guild: {
+          connect: {
+            id: this.message.guild.id,
+          },
+        },
+        user: {
+          connect: {
+            id: this.message.author.id,
+          },
+        },
+      },
+    });
+
+    return relativeDateStr;
+  }
+
+  async syncGuild() {
+    const members = [...this.users.filterOutBots().values()];
+
+    this.message.channel.send("Syncing...");
+
+    await this.checkIfGuildExistsAndCreateIfNot(this.message.guild);
 
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
 
-      let user = await this.photon.users.findOne({
-        where: {
-          id: member.id,
-          username: member.username
-        }
-      });
-
-      if (!user) {
-        user = await this.photon.users.create({
-          data: {
-            id: member.id,
-            guild: {
-              connect: {
-                id: guildId
-              }
-            }
-          }
-        });
-      }
+      await this.checkIfUserExistsAndCreateIfNot(member, this.message.guild);
     }
 
-    this.message.channel.send('Done');
+    this.message.channel.send("Done");
   }
 
   async addCommandToGuild(trigger, response) {
-    const {
-      author: { id: userId },
-      guild: { id: guildId }
-    } = this.message;
+    const { author, guild } = this.message;
+
+    await checkIfUserExistsAndCreateIfNot(author, guild);
 
     let [command] = await this.photon.guilds
-      .findOne({ where: { id: guildId } })
+      .findOne({ where: { id: guild.id } })
       .commands({
         where: {
-          trigger
-        }
+          trigger,
+        },
       });
-
-    console.log({ command });
 
     if (!command) {
       command = await this.photon.commands.create({
@@ -78,26 +160,49 @@ export class Store {
           trigger,
           user: {
             connect: {
-              id: userId
-            }
+              id: member.id,
+            },
           },
           guild: {
             connect: {
-              id: guildId
-            }
-          }
-        }
+              id: guild.id,
+            },
+          },
+        },
       });
     }
+
+    return command;
+  }
+
+  async removeGuildComand(trigger) {
+    const {
+      guild: { id: guildId },
+    } = this.message;
+
+    await this.photon.guilds.update({
+      where: { id: guildId },
+      data: {
+        commands: {
+          deleteMany: {
+            trigger,
+          },
+        },
+      },
+    });
   }
 
   async getGuildComands() {
     const {
-      guild: { id: guildId }
+      guild: { id: guildId },
     } = this.message;
 
-    return await this.photon.guilds
+    const commands = await this.photon.guilds
       .findOne({ where: { id: guildId } })
       .commands();
+
+    return (commands || []).map(
+      ({ trigger, response }) => new Command({ trigger, response })
+    );
   }
 }

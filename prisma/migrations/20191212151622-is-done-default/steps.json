@@ -1,0 +1,25 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "stepType": "CreateDirective",
+      "model": "Reminder",
+      "field": "isDone",
+      "directive": "default"
+    },
+    {
+      "stepType": "CreateDirectiveArgument",
+      "model": "Reminder",
+      "field": "isDone",
+      "directive": "default",
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "stepType": "UpdateField",
+      "model": "User",
+      "field": "timezone",
+      "arity": "optional"
+    }
+  ]
+}

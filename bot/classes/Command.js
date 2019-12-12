@@ -38,8 +38,8 @@ export class Command {
     // Sub commands for ths resolver
     commands,
 
-    // Flags for this command
-    flags,
+    // Update yargs parser
+    yargs,
 
     // Forced flags
     flagValues,
@@ -50,7 +50,7 @@ export class Command {
     this.action = action;
     this.useVoiceCommand = useVoiceCommand;
     this.commands = commands;
-    this.flags = flags;
+    this.yargs = yargs;
     this.flagValues = flagValues || {};
 
     this.run = this.run.bind(this);
@@ -111,8 +111,8 @@ export class Command {
 
     let nextInput = removeFromString(input, match);
 
-    if (this.flags) {
-      const { remaining, flags } = getFlags(nextInput, this.flags);
+    if (this.yargs) {
+      const { remaining, flags } = getFlags(nextInput, this.yargs);
 
       meta.flags = { ...meta.flags, ...flags };
       nextInput = removeFromString(remaining, match);
@@ -120,7 +120,7 @@ export class Command {
 
     // Initialize foice
     if (
-      (this.useVoiceCommand || meta.flags.talk || meta.flags.voice) &&
+      (this.useVoiceCommand || meta.flags.speak || meta.flags.voice) &&
       !meta.voiceInstance
     ) {
       meta.voiceInstance = new Voice(meta);
@@ -153,8 +153,8 @@ export class Command {
         ? this.response
         : await this.response(nextInput, meta);
 
-      if (meta.flags.talk || meta.voiceInstance) {
-        await meta.voiceInstance.talk(content);
+      if (meta.flags.speak || meta.voiceInstance) {
+        await meta.voiceInstance.speak(content);
       } else {
         meta.message.channel.send(content);
       }

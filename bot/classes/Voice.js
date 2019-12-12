@@ -38,7 +38,7 @@ export class Voice {
     this.connection = null;
   }
 
-  async talk(text) {
+  async speak(text) {
     return new Promise(async (resolve, reject) => {
       if (this.flags.silent) return resolve();
 
@@ -95,7 +95,7 @@ export class Voice {
         inactivityTimeout: -1
       });
 
-      await this.talk(`I'm Listening...`);
+      await this.speak(`I'm Listening...`);
       await this.playFileFromBucket('beep');
 
       pcmStream.pipe(recognizeStream);

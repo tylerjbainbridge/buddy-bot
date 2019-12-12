@@ -1,7 +1,6 @@
 datasource db {
     provider = "postgres"
     url = "***"
-    default  = true
 }
 
 generator photon {
@@ -15,6 +14,23 @@ model Guild {
 
     user User[]
     commands Command[]
+    reminders Reminder[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Reminder {
+    id String @id
+
+    content String
+
+    user User
+    guild Guild
+    messageId String
+
+    isDone Boolean @default(false)
+    remindAt DateTime 
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -45,8 +61,12 @@ model Command {
 model User {
     id String @id
 
+    username String
+
     guild Guild
     commands Command[]
+
+    timezone String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

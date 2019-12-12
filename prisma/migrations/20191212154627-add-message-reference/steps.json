@@ -1,0 +1,12 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "stepType": "CreateField",
+      "model": "Reminder",
+      "field": "messageId",
+      "type": "String",
+      "arity": "required"
+    }
+  ]
+}
