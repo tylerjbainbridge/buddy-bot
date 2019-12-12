@@ -1,4 +1,4 @@
-import shortid from "shortid";
+import shortid from 'shortid';
 
 export class Store {
   constructor(meta) {
@@ -8,22 +8,22 @@ export class Store {
   async syncGuild() {
     const members = [...this.users.filterOutBots().values()];
 
-    this.message.channel.send("Syncing...");
+    this.message.channel.send('Syncing...');
 
     const { id: guildId, name: guildName } = this.message.guild;
 
     let guild = await this.photon.guilds.findOne({
       where: {
-        id: guildId,
-      },
+        id: guildId
+      }
     });
 
     if (!guild) {
       guild = await this.photon.guilds.create({
         data: {
           id: guildId,
-          name: guildName,
-        },
+          name: guildName
+        }
       });
     }
 
@@ -33,8 +33,8 @@ export class Store {
       let user = await this.photon.users.findOne({
         where: {
           id: member.id,
-          username: member.username,
-        },
+          username: member.username
+        }
       });
 
       if (!user) {
@@ -43,28 +43,32 @@ export class Store {
             id: member.id,
             guild: {
               connect: {
-                id: guildId,
-              },
-            },
-          },
+                id: guildId
+              }
+            }
+          }
         });
       }
     }
 
-    this.message.channel.send("Done");
+    this.message.channel.send('Done');
   }
 
   async addCommandToGuild(trigger, response) {
     const {
-      user,
-      guild: { id: guildId, name: guildName },
-    } = this.message.guild;
+      author: { id: userId },
+      guild: { id: guildId }
+    } = this.message;
 
-    let [command] = await this.photon.commands.findMany({
-      where: {
-        trigger,
-      },
-    });
+    let [command] = await this.photon.guilds
+      .findOne({ where: { id: guildId } })
+      .commands({
+        where: {
+          trigger
+        }
+      });
+
+    console.log({ command });
 
     if (!command) {
       command = await this.photon.commands.create({
@@ -74,16 +78,26 @@ export class Store {
           trigger,
           user: {
             connect: {
-              id: userId,
-            },
+              id: userId
+            }
           },
           guild: {
             connect: {
-              id: guildId,
-            },
-          },
-        },
+              id: guildId
+            }
+          }
+        }
       });
     }
+  }
+
+  async getGuildComands() {
+    const {
+      guild: { id: guildId }
+    } = this.message;
+
+    return await this.photon.guilds
+      .findOne({ where: { id: guildId } })
+      .commands();
   }
 }
