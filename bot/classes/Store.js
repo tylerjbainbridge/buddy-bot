@@ -76,7 +76,7 @@ export class Store {
     });
   }
 
-  async addReminder(dateStr) {
+  async addReminder(input, meta) {
     await this.checkIfGuildExistsAndCreateIfNot(this.message.guild);
     await this.checkIfUserExistsAndCreateIfNot(
       this.message.author,
@@ -87,7 +87,7 @@ export class Store {
       .tz("America/New_York")
       .utcOffset();
 
-    const parsedDate = chrono.parse(dateStr);
+    const parsedDate = chrono.parse(input);
 
     parsedDate[0].start.assign("timezoneOffset", offset);
 
@@ -95,12 +95,14 @@ export class Store {
       .tz("America/New_York")
       .calendar();
 
-    const content = removeFromString(dateStr, parsedDate[0].text);
+    const content = removeFromString(input, parsedDate[0].text);
 
     await this.photon.reminders.create({
       data: {
         id: shortid(),
         content,
+        messageId: meta.message.id,
+        channelId: meta.message.channel.id,
         remindAt: new Date(
           moment(parsedDate[0].start.date())
             .utc()
@@ -120,7 +122,7 @@ export class Store {
       },
     });
 
-    return relativeDateStr;
+    return { relativeDateStr, content };
   }
 
   async syncGuild() {

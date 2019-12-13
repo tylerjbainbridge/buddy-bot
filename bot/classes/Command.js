@@ -101,6 +101,7 @@ export class Command {
     if (!match) return false;
 
     const meta = {
+      match,
       ...initialMeta,
       flags: {
         ...this.flagValues,

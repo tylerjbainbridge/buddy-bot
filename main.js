@@ -7,8 +7,7 @@ import moment from "moment-timezone";
 import { sleep, getBotChannel } from "./bot/utils";
 import { handler } from "./bot/handler";
 import { photon } from "./bot/config";
-import { Store } from "./bot/classes/Store";
-import { runJobs } from "./bot/jobs";
+import { jobs } from "./bot/jobs";
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -45,8 +44,8 @@ client.once("ready", async () => {
       channel.send(`BuddyBot offline (updating)`);
     });
   }
-
-  await runJobs(client, photon);
+  
+  await Promise.all(jobs.map((job) => job(client, photon)));
 });
 
 client.on("message", handler(client, photon));

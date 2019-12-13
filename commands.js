@@ -230,9 +230,11 @@ export const commands = [
     trigger: "remind",
     commands: [
       new Command({
-        trigger: "me to",
+        trigger: "me to|me that|me",
         response: async (input, meta) => {
-          return await meta.store.addReminder(input)
+          const { relativeDateStr, content } = await meta.store.addReminder(input, meta);
+
+          return `I will remind you to "${content}" ${relativeDateStr.toLowerCase()}`;
         },
       }),
     ]

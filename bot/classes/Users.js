@@ -3,14 +3,18 @@ export class Users {
     Object.assign(this, meta);
   }
 
+  get users() {
+    return this.message ? this.message.guild.members : this.client.users;
+  }
+
   findByUsername(username) {
-    return this.message.guild.members.find(
+    return this.users.find(
       ({ user }) => user.username.toLowerCase() === username.toLowerCase()
     );
   }
 
   filterOutBots() {
-    return this.message.guild.members.filter(({ user }) => !user.bot);
+    return this.users.filter(({ user }) => !user.bot);
   }
 
   getUserMention(user) {
@@ -18,7 +22,7 @@ export class Users {
   }
 
   getBatchUserMention() {
-    return this.message.guild.members
+    return this.users
       .map(({ user }) => this.getUserMention(user))
       .join("\n");
   }
