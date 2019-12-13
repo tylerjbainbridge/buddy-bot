@@ -22,8 +22,6 @@ export class Users {
   }
 
   getBatchUserMention() {
-    return this.users
-      .map(({ user }) => this.getUserMention(user))
-      .join("\n");
+    return this.users.map(({ user }) => this.getUserMention(user)).join("\n");
   }
 }

@@ -3,8 +3,8 @@ import { sleep, getGeneralChannel } from "./utils";
 import { Users } from "./classes/Users";
 
 const reminders = async (client, photon) => {
-  const store = new Store({ photon });
-  const users = new Users({ client });
+  const store = new Store({ client, photon });
+  const users = new Users({ client, photon });
 
   // Run every 10 seconds
   while (true) {

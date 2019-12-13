@@ -232,12 +232,15 @@ export const commands = [
       new Command({
         trigger: "me to|me that|me",
         response: async (input, meta) => {
-          const { relativeDateStr, content } = await meta.store.addReminder(input, meta);
+          const { relativeDateStr, content } = await meta.store.addReminder(
+            input,
+            meta
+          );
 
           return `I will remind you to "${content}" ${relativeDateStr.toLowerCase()}`;
         },
       }),
-    ]
+    ],
   }),
 
   new Command({
@@ -264,8 +267,12 @@ export const commands = [
                   alias: "response",
                   type: "string",
                 }),
-            action: async (input, meta) => {
+            response: async (input, meta) => {
+              if (input === "help") return 'e.g. -t "trigger" -r "response"';
+
               await meta.store.addCommandToGuild(meta.flags.t, meta.flags.r);
+
+              return `Added \`${meta.flags.t}\`: \`${meta.flags.r}\``;
             },
           }),
           new Command({
@@ -273,15 +280,19 @@ export const commands = [
             response: async (input, meta) => {
               await meta.store.removeGuildComand(input);
 
-              return `removed ${input}`;
+              return `Removed ${input}`;
             },
           }),
           new Command({
             trigger: "list",
             response: async (_, meta) => {
               const guildCommands = await meta.store.getGuildComands();
-              return guildCommands.map(
-                ({ trigger, response }) => `\`${trigger}\`: \`${response}\`\n`
+              return (
+                guildCommands
+                  .map(
+                    ({ trigger, response }) => `\`${trigger}\`: \`${response}\``
+                  )
+                  .join("\n") || "no commands to list"
               );
             },
           }),

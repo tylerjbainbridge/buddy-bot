@@ -135,7 +135,7 @@ export class Store {
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
 
-      await this.checkIfUserExistsAndCreateIfNot(member, this.message.guild);
+      await this.checkIfUserExistsAndCreateIfNot(member.user, this.message.guild);
     }
 
     this.message.channel.send("Done");
@@ -144,7 +144,7 @@ export class Store {
   async addCommandToGuild(trigger, response) {
     const { author, guild } = this.message;
 
-    await checkIfUserExistsAndCreateIfNot(author, guild);
+    await this.checkIfUserExistsAndCreateIfNot(author, guild);
 
     let [command] = await this.photon.guilds
       .findOne({ where: { id: guild.id } })
@@ -162,7 +162,7 @@ export class Store {
           trigger,
           user: {
             connect: {
-              id: member.id,
+              id: author.id,
             },
           },
           guild: {
