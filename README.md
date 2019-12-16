@@ -12,7 +12,7 @@ Each guild can have it's own custom commands
 
 BuddyBoy is also capable of handling timezone agnostic reminders
 
-`bb remind me to make dinner plans in tomorrow at noon`
+`bb remind me to make dinner plans tomorrow at noon`
 
 > I will remind you to "make dinner plans" tomorrow at 12pm.
 
