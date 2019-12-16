@@ -2,7 +2,7 @@
 
 A Discord bot for our group chat.
 
-Capable of handling voice commands and responding with speech.
+Capable of handling voice commands and responding with speech. See `commands.js` for a full list.
 
 Each guild can have it's own custom commands
 
