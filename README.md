@@ -4,6 +4,16 @@ A Discord bot for our group chat.
 
 Capable of handling voice commands and responding with speech.
 
+Each guild can have it's own custom commands
+
+`bb guild commands add -t "trigger here" -r "response here"`
+
+BuddyBoy is also capable of handling timezone agnostic reminders
+
+`bb remind me to make dinner plans in tomorrow at noon`
+
+> I will remind you to "make dinner plans" tomorrow at 12pm.
+
 Running locally requires a .env file with the proper variables + a discord bot key.
 Contact me for a .env file that will allow for local dev.
 
