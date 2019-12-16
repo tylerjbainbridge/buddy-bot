@@ -2,7 +2,9 @@
 
 A Discord bot for our group chat.
 
-Capable of handling voice commands and responding with speech. See `commands.js` for a full list.
+Capable of handling text and voice commands and responding with text or speech. See `commands.js` for a full list.
+
+To activate voice mode use the `-v` flag.
 
 Each guild can have it's own custom commands
 
