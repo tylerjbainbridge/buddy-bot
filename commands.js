@@ -1,236 +1,236 @@
-import axios from "axios";
-import { sample } from "lodash";
+import axios from 'axios';
+import { sample } from 'lodash';
 
-import { postToJamieReddit, removeFromString } from "./bot/utils";
+import { postToJamieReddit, removeFromString } from './bot/utils';
 
-import { Command } from "./bot/classes/Command";
-import { Voice } from "./bot/classes/Voice";
+import { Command } from './bot/classes/Command';
+import { Voice } from './bot/classes/Voice';
 
 import {
   reddit,
   WEATHER_APP_ID,
   BUDS_WITHOUT_COD,
-  POLLY_VOICES,
-} from "./bot/config.js";
+  POLLY_VOICES
+} from './bot/config.js';
 
 export const commands = [
   new Command({
-    trigger: "hello|hi|hello robot",
+    trigger: 'hello|hi|hello robot',
     response: (_, meta) =>
       sample([
         `hey ${meta.message.author.username ||
-          ""}! my name is buddy bot...beep boop...haha`,
-        "hello human",
-      ]),
+          ''}! my name is buddy bot...beep boop...haha`,
+        'hello human'
+      ])
   }),
 
   new Command({
-    trigger: "freaks me out",
-    response: ":(",
+    trigger: 'freaks me out',
+    response: ':('
   }),
 
   new Command({
-    trigger: "beep boop",
-    response: "i am a robot",
+    trigger: 'beep boop',
+    response: 'i am a robot'
   }),
 
   new Command({
-    trigger: "home|house|github|gh|The Hub",
-    response: `it's public ;)`,
+    trigger: 'home|house|github|gh|The Hub',
+    response: `it's public ;)`
   }),
 
   new Command({
-    trigger: "sing your song",
-    response: "buddy boy buddy boy whatcha gonna do when they come for u!",
+    trigger: 'sing your song',
+    response: 'buddy boy buddy boy whatcha gonna do when they come for u!'
   }),
 
   new Command({
-    trigger: "sucks",
-    response: "no you do :smile:",
+    trigger: 'sucks',
+    response: 'no you do :smile:'
   }),
 
   new Command({
-    trigger: "did you love it did you hate it",
-    response: "what would you rate it?",
+    trigger: 'did you love it did you hate it',
+    response: 'what would you rate it?'
   }),
 
   new Command({
     trigger: "you're the best, you're the best",
-    response: "what should _I_ review next?",
+    response: 'what should _I_ review next?'
   }),
 
   new Command({
-    trigger: "list voices",
-    response: POLLY_VOICES.map(voice => `\`${voice}\``).join("\n"),
+    trigger: 'list voices',
+    response: POLLY_VOICES.map(voice => `\`${voice}\``).join('\n')
   }),
 
   new Command({
-    trigger: "sandbox",
-    response: "https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot",
+    trigger: 'sandbox',
+    response: 'https://codesandbox.io/s/github/tylerjbainbridge/buddy-bot'
   }),
 
   new Command({
-    trigger: "repo",
-    response: "https://github.com/tylerjbainbridge/buddy-bot",
+    trigger: 'repo',
+    response: 'https://github.com/tylerjbainbridge/buddy-bot'
   }),
 
   new Command({
-    trigger: "things jamie has said|thingsjamiehassaid|tjhs",
+    trigger: 'things jamie has said|thingsjamiehassaid|tjhs',
     response: async () => {
       // Default: get random
       const submission = reddit
-        .getSubreddit("thingsjamiehassaid")
+        .getSubreddit('thingsjamiehassaid')
         .getRandomSubmission();
 
-      return [" - Jamie", "- Jamie"].reduce((p, c) => {
+      return [' - Jamie', '- Jamie'].reduce((p, c) => {
         return removeFromString(p, c);
       }, await submission.title);
     },
     commands: [
       new Command({
-        trigger: "add",
-        response: title => postToJamieReddit(title),
+        trigger: 'add',
+        response: title => postToJamieReddit(title)
       }),
 
       new Command({
-        trigger: "delete last",
+        trigger: 'delete last',
         response: async () => {
           const latestPost = await reddit
-            .getSubreddit("thingsjamiehassaid")
+            .getSubreddit('thingsjamiehassaid')
             .getNew()[0];
 
           await latestPost.delete();
 
           return `Deleted\n> ${latestPost.title}`;
-        },
-      }),
-    ],
+        }
+      })
+    ]
   }),
 
   new Command({
-    trigger: "gif",
+    trigger: 'gif',
     response: async input => {
       const {
         data: {
-          data: { image_url: gif },
-        },
+          data: { image_url: gif }
+        }
       } = await axios.get(
-        `http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=${input}`
+        `http://api.giphy.com/v1/gifs/random?api_key=mCVyzEu7SHtORmw1wtVoxDJY5jd6h4aX&tag=${input}`
       );
 
-      if (!gif) return "no gif found :(";
+      if (!gif) return 'no gif found :(';
 
       return gif;
-    },
+    }
   }),
 
   new Command({
-    trigger: "kegparty|give me a beer|random beer|beer",
+    trigger: 'kegparty|give me a beer|random beer|beer',
     response: async () => {
       const { data } = await axios.get(
-        "http://kegparty.herokuapp.com/api/random"
+        'http://kegparty.herokuapp.com/api/random'
       );
 
       const {
         link,
         name,
-        style: { name: styleName, description },
+        style: { name: styleName, description }
       } = data;
 
       return `Courtesy of Key Party\n\n\nName: ${name}\n\n\nStyle: ${styleName}\n\n\nDescription: ${description}\n\n\nMore info: ${link}`;
-    },
+    }
   }),
 
   new Command({
-    trigger: "weather in",
+    trigger: 'weather in',
     response: async input => {
       const { data: weatherData } = await axios.get(
         `http://api.openweathermap.org/data/2.5/weather?appid=${WEATHER_APP_ID}&q=${input}`
       );
 
-      if (!weatherData) return "no weather found :(";
+      if (!weatherData) return 'no weather found :(';
 
       return weatherData.weather.pop().description;
-    },
+    }
   }),
 
   new Command({
-    trigger: "fun fact|funfact",
+    trigger: 'fun fact|funfact',
     flagValues: {
-      pollyVoice: "Ivy",
+      pollyVoice: 'Ivy'
     },
     response: async () => {
-      const { data } = await axios.get("http://numbersapi.com/random");
+      const { data } = await axios.get('http://numbersapi.com/random');
 
       return data;
-    },
+    }
   }),
 
   new Command({
-    trigger: "tj|thomas",
-    response: () => sample(["dj*", "terry*", "tom*"]),
+    trigger: 'tj|thomas',
+    response: () => sample(['dj*', 'terry*', 'tom*'])
   }),
 
   new Command({
-    trigger: "tell jam to buy cod|you know what to do",
+    trigger: 'tell jam to buy cod|you know what to do',
     response: (_, meta) => {
-      const jam = meta.users.findByUsername("jam");
+      const jam = meta.users.findByUsername('jam');
 
       return `${meta.users.getUserMention(jam)}, buy cod!`;
-    },
+    }
   }),
 
   new Command({
-    trigger: "cod",
+    trigger: 'cod',
     response: (input, meta) => {
       const codBuds = meta.users
         .filterOutBots()
         .filter(({ username }) => !BUDS_WITHOUT_COD.includes(username));
 
-      const jam = meta.users.findByUsername("jam");
+      const jam = meta.users.findByUsername('jam');
 
       return `let's play cod ${input ||
-        "now"}\n${meta.users.getBatchUserMention(
+        'now'}\n${meta.users.getBatchUserMention(
         codBuds
       )}\n${meta.users.getUserMention(jam)} pls play with us :(`;
-    },
+    }
   }),
 
   new Command({
-    trigger: "boy din",
+    trigger: 'boy din',
     response: (_, meta) => {
       const buds = meta.users.filterOutBots();
       return `boy din?\n${meta.users.getBatchUserMention(buds)}`;
-    },
+    }
   }),
 
   new Command({
-    trigger: "play",
+    trigger: 'play',
     action: async (fileName, meta) => {
       const voice = new Voice(meta);
 
       await voice.connect();
 
       await voice.playFileFromBucket(fileName);
-    },
+    }
   }),
 
   new Command({
-    trigger: "say",
+    trigger: 'say',
     action: async (text, meta) => {
       const voice = new Voice(meta);
 
       await voice.connect();
 
       await voice.speak(text);
-    },
+    }
   }),
 
   new Command({
-    trigger: "remind",
+    trigger: 'remind',
     commands: [
       new Command({
-        trigger: "me to|me that|me",
+        trigger: 'me to|me that|me',
         response: async (input, meta) => {
           const { relativeDateStr, content } = await meta.store.addReminder(
             input,
@@ -238,53 +238,53 @@ export const commands = [
           );
 
           return `I will remind you to "${content}" ${relativeDateStr.toLowerCase()}`;
-        },
-      }),
-    ],
+        }
+      })
+    ]
   }),
 
   new Command({
-    trigger: "guild",
+    trigger: 'guild',
     commands: [
       new Command({
-        trigger: "sync",
+        trigger: 'sync',
         action: async (input, meta) => {
           await meta.store.syncGuild();
-        },
+        }
       }),
       new Command({
-        trigger: "commands",
+        trigger: 'commands',
         commands: [
           new Command({
-            trigger: "add",
+            trigger: 'add',
             yargs: yargs =>
               yargs
-                .option("t", {
-                  alias: "trigger",
-                  type: "string",
+                .option('t', {
+                  alias: 'trigger',
+                  type: 'string'
                 })
-                .option("r", {
-                  alias: "response",
-                  type: "string",
+                .option('r', {
+                  alias: 'response',
+                  type: 'string'
                 }),
             response: async (input, meta) => {
-              if (input === "help") return 'e.g. -t "trigger" -r "response"';
+              if (input === 'help') return 'e.g. -t "trigger" -r "response"';
 
               await meta.store.addCommandToGuild(meta.flags.t, meta.flags.r);
 
               return `Added \`${meta.flags.t}\`: \`${meta.flags.r}\``;
-            },
+            }
           }),
           new Command({
-            trigger: "remove",
+            trigger: 'remove',
             response: async (input, meta) => {
               await meta.store.removeGuildComand(input);
 
               return `Removed ${input}`;
-            },
+            }
           }),
           new Command({
-            trigger: "list",
+            trigger: 'list',
             response: async (_, meta) => {
               const guildCommands = await meta.store.getGuildComands();
               return (
@@ -292,14 +292,14 @@ export const commands = [
                   .map(
                     ({ trigger, response }) => `\`${trigger}\`: \`${response}\``
                   )
-                  .join("\n") || "no commands to list"
+                  .join('\n') || 'no commands to list'
               );
-            },
-          }),
-        ],
-      }),
-    ],
-  }),
+            }
+          })
+        ]
+      })
+    ]
+  })
 
   // new Command({
   //   trigger: "voice",
