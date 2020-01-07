@@ -84,7 +84,6 @@ export class Store {
     );
 
     const offset = moment()
-      .tz("America/New_York")
       .utcOffset();
 
     const parsed = chrono.parse(input, new Date(), { IST: offset } );
