@@ -85,11 +85,11 @@ export class Store {
 
     const offset = moment()
       .tz("America/New_York")
-      .utcOffset();
+      .offset();
 
-    const parsedDate = chrono.parse(input);
+    const parsedDate = chrono.parse(input, offset);
 
-    parsedDate[0].start.assign("timezoneOffset", offset);
+    parsedDate.assign("timezoneOffset", offset);
 
     const relativeDateStr = moment(parsedDate[0].start.date())
       .tz("America/New_York")
