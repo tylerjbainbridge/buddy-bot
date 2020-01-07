@@ -87,7 +87,7 @@ export class Store {
       .tz("America/New_York")
       .utcOffset();
 
-    const parsed = chrono.parse(input, new Date(), { =IST: offset } );
+    const parsed = chrono.parse(input, new Date(), { IST: offset } );
 
     const startDate = parsed[0].start;
 
