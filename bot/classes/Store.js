@@ -87,15 +87,17 @@ export class Store {
       .tz("America/New_York")
       .utcOffset();
 
-    const parsedDate = chrono.parse(input, offset);
+    const parsed = chrono.parse(input, new Date(), { =IST: offset } );
 
-    parsedDate.assign("timezoneOffset", offset);
+    const startDate = parsed[0].start;
 
-    const relativeDateStr = moment(parsedDate[0].start.date())
+    startDate.assign("timezoneOffset", offset);
+
+    const relativeDateStr = moment(startDate.date())
       .tz("America/New_York")
       .calendar();
 
-    const content = removeFromString(input, parsedDate[0].text);
+    const content = removeFromString(input, parsed[0].text);
 
     await this.photon.reminders.create({
       data: {
@@ -104,7 +106,7 @@ export class Store {
         messageId: meta.message.id,
         channelId: meta.message.channel.id,
         remindAt: new Date(
-          moment(parsedDate[0].start.date())
+          moment(startDate.date())
             .utc()
             .format()
         ),
