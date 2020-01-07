@@ -88,6 +88,8 @@ export class Store {
 
     const parsed = chrono.parse(input, new Date(), { IST: offset } );
 
+    console.log(JSON.stringify(parsed, null, 4));
+
     const startDate = parsed[0].start;
 
     startDate.assign("timezoneOffset", offset);
