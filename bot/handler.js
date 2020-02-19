@@ -64,27 +64,27 @@ export const handler = (client, photon) => async message => {
       await message.react('😢');
       await message.channel.send('something went wrong :(');
     }
-    await message.react('😢');
-    await message.channel.send('something went wrong :(');
   }
 
   if (isProduction) {
     const ONE_HOUR = 3600000;
 
-    const collector = message.createReactionCollector(
-      (reaction, user) => {
-        console.log('reaction!', user.username, reaction.emoji.name);
-        return ['😇'].includes(reaction.emoji.name);
-      },
-      { time: ONE_HOUR }
-    );
+    if (message.author.username) {
+      const collector = message.createReactionCollector(
+        (reaction, user) => {
+          console.log('reaction!', user.username, reaction.emoji.name);
+          return ['😇'].includes(reaction.emoji.name);
+        },
+        { time: ONE_HOUR }
+      );
 
-    collector.on('collect', async r => {
-      const name = message.author.username.toLowerCase();
-      const post = `"${message.content}" - ${name}`;
-      const url = await postToJamieReddit(post);
-      message.channel.send(`> ${message.content}\n${url}`);
-      collector.stop();
-    });
+      collector.on('collect', async r => {
+        const name = message.author.username.toLowerCase();
+        const post = `"${message.content}" - ${name}`;
+        const url = await postToJamieReddit(post);
+        message.channel.send(`> ${post}\n${url}`);
+        collector.stop();
+      });
+    }
   }
 };
