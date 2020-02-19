@@ -3,8 +3,4 @@
 # lift lockfile v1
 # Read more about conflict resolution here: TODO
 
-20191212151013-init
-20191212151524-optional-timezone
-20191212151622-is-done-default
-20191212154627-add-message-reference
-20191213094319-add-channel-id
+20191213103423-init

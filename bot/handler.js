@@ -1,16 +1,16 @@
 import { Command } from './classes/Command';
 import { commands } from '../commands';
-import minimist from 'minimist';
 
 import { Users } from './classes/Users';
 
 import { postToJamieReddit, getFlags } from './utils';
 import { Store } from './classes/Store';
 
-const TRIGGERS =
-  process.env.NODE_ENV === 'production'
-    ? ['bot', 'robot', 'alexa', 'rb', 'roomiobot', 'buddy bot', 'bb']
-    : ['test'];
+const isProduction = process.env.NODE_ENV === 'production';
+
+const TRIGGERS = isProduction
+  ? ['bot', 'robot', 'alexa', 'rb', 'roomiobot', 'buddy bot', 'bb']
+  : ['test'];
 
 export const handler = (client, photon) => async message => {
   const { content } = message;
@@ -60,11 +60,15 @@ export const handler = (client, photon) => async message => {
     }
   } catch (e) {
     console.log(e);
+    if (isProduction) {
+      await message.react('😢');
+      await message.channel.send('something went wrong :(');
+    }
     await message.react('😢');
     await message.channel.send('something went wrong :(');
   }
 
-  if (!TRIGGERS.includes('test')) {
+  if (isProduction) {
     const ONE_HOUR = 3600000;
 
     const collector = message.createReactionCollector(
