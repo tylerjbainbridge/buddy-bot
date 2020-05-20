@@ -41,7 +41,7 @@ new Command({
 
   // Each command can take an array of sub commands- these are options for the parent command
   commands: [
-    new Resolve({
+    new Command({
       trigger: 'add',
       // Add to list here
       action: () => {},
