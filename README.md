@@ -10,7 +10,7 @@ Each guild can have it's own custom commands
 
 `bb guild commands add -t "trigger here" -r "response here"`
 
-BuddyBoy is also capable of handling timezone agnostic reminders
+BuddyBot is also capable of handling timezone agnostic reminders
 
 `bb remind me to make dinner plans tomorrow at noon`
 
