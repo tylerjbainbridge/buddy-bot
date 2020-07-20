@@ -3,8 +3,8 @@ datasource db {
     url = "***"
 }
 
-generator photon {
-    provider = "photonjs"
+generator prisma {
+    provider = "prisma-client-js"
 }
 
 model Guild {
@@ -16,8 +16,9 @@ model Guild {
     commands  Command[]
     reminders Reminder[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Channel   Channel[]
 }
 
 model Reminder {
@@ -25,8 +26,12 @@ model Reminder {
 
     content String
 
-    user      User
-    guild     Guild
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
+
     messageId String
     channelId String
 
@@ -40,7 +45,8 @@ model Reminder {
 model Channel {
     id String @id
 
-    guild Guild
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -52,8 +58,11 @@ model Command {
     trigger  String
     response String
 
-    user  User
-    guild Guild
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -64,11 +73,14 @@ model User {
 
     username String
 
-    guild    Guild
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
+
     commands Command[]
 
     timezone String?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    Reminder  Reminder[]
 }

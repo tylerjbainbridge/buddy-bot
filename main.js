@@ -31,9 +31,8 @@ client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
   if (process.env.DYNO) {
-    const channel = getBotChannel(client);
-
     const date = moment().tz('America/New_York').format('M/D/YYYY, h:mm:ss a');
+    const channel = getBotChannel(client);
 
     channel.send(`beep boop BuddyBot updated (${date})`);
 
@@ -43,7 +42,7 @@ client.once('ready', async () => {
     });
   }
 
-  await Promise.all(jobs.map((job) => job(client, photon)));
+  // await Promise.all(jobs.map((job) => job(client, photon)));
 });
 
 client.on('message', handler(client, photon));

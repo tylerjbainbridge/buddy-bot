@@ -1,6 +1,6 @@
 datasource db {
     provider = "postgres"
-    url      = env("DATABASE_URL")
+    url      = "postgres://tztlzyyycuxcwi:67f4af2ad45305b8a78288b131c30886abd00ae966cd62ac36ff154ba32f833b@ec2-174-129-255-37.compute-1.amazonaws.com:5432/d5agn6r6p90rek"
 }
 
 generator prisma {

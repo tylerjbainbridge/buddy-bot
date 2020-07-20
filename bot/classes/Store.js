@@ -1,9 +1,9 @@
-import shortid from "shortid";
-import chrono from "chrono-node";
-import moment from "moment-timezone";
+import shortid from 'shortid';
+import chrono from 'chrono-node';
+import moment from 'moment-timezone';
 
-import { Command } from "./Command";
-import { removeFromString } from "../utils";
+import { Command } from './Command';
+import { removeFromString } from '../utils';
 
 export class Store {
   constructor(meta) {
@@ -11,14 +11,14 @@ export class Store {
   }
 
   async checkIfUserExistsAndCreateIfNot({ id, username }, { id: guildId }) {
-    let user = await this.photon.users.findOne({
+    let user = await this.photon.user.findOne({
       where: {
         id,
       },
     });
 
     if (!user) {
-      user = await this.photon.users.create({
+      user = await this.photon.user.create({
         data: {
           id,
           username,
@@ -35,14 +35,14 @@ export class Store {
   }
 
   async checkIfGuildExistsAndCreateIfNot({ id: guildId, name: guildName }) {
-    let guild = await this.photon.guilds.findOne({
+    let guild = await this.photon.guild.findOne({
       where: {
         id: guildId,
       },
     });
 
     if (!guild) {
-      guild = await this.photon.guilds.create({
+      guild = await this.photon.guild.create({
         data: {
           id: guildId,
           name: guildName,
@@ -54,7 +54,7 @@ export class Store {
   }
 
   async getPastDueReminders() {
-    return await this.photon.reminders.findMany({
+    return await this.photon.reminder.findMany({
       where: {
         isDone: false,
         remindAt: {
@@ -66,7 +66,7 @@ export class Store {
   }
 
   async completeReminder(reminder) {
-    return await this.photon.reminders.update({
+    return await this.photon.reminder.update({
       where: {
         id: reminder.id,
       },
@@ -83,34 +83,29 @@ export class Store {
       this.message.guild
     );
 
-    const offset = moment()
-      .utcOffset();
+    const offset = moment().utcOffset();
 
-    const parsed = chrono.parse(input, new Date(), { IST: offset } );
+    const parsed = chrono.parse(input, new Date(), { IST: offset });
 
     console.log(JSON.stringify(parsed, null, 4));
 
     const startDate = parsed[0].start;
 
-    startDate.assign("timezoneOffset", offset);
+    startDate.assign('timezoneOffset', offset);
 
     const relativeDateStr = moment(startDate.date())
-      .tz("America/New_York")
+      .tz('America/New_York')
       .calendar();
 
     const content = removeFromString(input, parsed[0].text);
 
-    await this.photon.reminders.create({
+    await this.photon.reminder.create({
       data: {
         id: shortid(),
         content,
         messageId: meta.message.id,
         channelId: meta.message.channel.id,
-        remindAt: new Date(
-          moment(startDate.date())
-            .utc()
-            .format()
-        ),
+        remindAt: new Date(moment(startDate.date()).utc().format()),
         isDone: false,
         guild: {
           connect: {
@@ -131,17 +126,20 @@ export class Store {
   async syncGuild() {
     const members = [...this.users.filterOutBots().values()];
 
-    this.message.channel.send("Syncing...");
+    this.message.channel.send('Syncing...');
 
     await this.checkIfGuildExistsAndCreateIfNot(this.message.guild);
 
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
 
-      await this.checkIfUserExistsAndCreateIfNot(member.user, this.message.guild);
+      await this.checkIfUserExistsAndCreateIfNot(
+        member.user,
+        this.message.guild
+      );
     }
 
-    this.message.channel.send("Done");
+    this.message.channel.send('Done');
   }
 
   async addCommandToGuild(trigger, response) {
@@ -149,7 +147,7 @@ export class Store {
 
     await this.checkIfUserExistsAndCreateIfNot(author, guild);
 
-    let [command] = await this.photon.guilds
+    let [command] = await this.photon.guild
       .findOne({ where: { id: guild.id } })
       .commands({
         where: {
@@ -185,7 +183,7 @@ export class Store {
       guild: { id: guildId },
     } = this.message;
 
-    await this.photon.guilds.update({
+    await this.photon.guild.update({
       where: { id: guildId },
       data: {
         commands: {
@@ -202,7 +200,7 @@ export class Store {
       guild: { id: guildId },
     } = this.message;
 
-    const commands = await this.photon.guilds
+    const commands = await this.photon.guild
       .findOne({ where: { id: guildId } })
       .commands();
 
