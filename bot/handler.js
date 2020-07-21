@@ -3,7 +3,7 @@ import { commands } from '../commands';
 
 import { Users } from './classes/Users';
 
-import { postToJamieReddit, getFlags } from './utils';
+import { postToJamieReddit, getFlags, getBotChannel } from './utils';
 import { Store } from './classes/Store';
 
 const isProduction = process.env.NODE_ENV === 'production';
