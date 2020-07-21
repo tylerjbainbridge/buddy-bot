@@ -15,6 +15,8 @@ const TRIGGERS = isProduction
 export const handler = (client, photon) => async (message) => {
   const { content } = message;
 
+  const botChannel = getBotChannel(client);
+
   if (message.author.bot) return;
 
   try {
@@ -62,7 +64,8 @@ export const handler = (client, photon) => async (message) => {
     console.log(e);
     if (isProduction) {
       await message.react('😢');
-      await message.channel.send('something went wrong :(');
+
+      await botChannel.send(`something went wrong\n> ${content}`);
     }
   }
 
