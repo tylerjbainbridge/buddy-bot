@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { sample } from 'lodash';
+import moment from 'moment';
 
 import { postToJamieReddit, removeFromString } from './bot/utils';
 
@@ -91,9 +92,11 @@ export const commands = [
 
       const submission = submissions[idx];
 
-      return [' - Jamie', '- Jamie'].reduce((p, c) => {
-        return removeFromString(p, c);
-      }, await submission.title);
+      const { title, url, created } = await submission.fetch();
+
+      const date = moment.unix(created).format('MMMM Do YYYY');
+
+      return `${title} (${date})\n${url}`;
     },
     commands: [
       new Command({

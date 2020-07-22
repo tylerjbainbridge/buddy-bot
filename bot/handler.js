@@ -20,6 +20,8 @@ export const handler = (client, photon) => async (message) => {
   if (message.author.bot) return;
 
   try {
+    await message.react('🤖');
+
     const { remaining: input, flags } = getFlags(content, (yargs) =>
       yargs
         .option('p', {
@@ -58,7 +60,7 @@ export const handler = (client, photon) => async (message) => {
     const success = await root.run(input, meta, { isStrict: true });
 
     if (success) {
-      await message.react('🤖');
+      await message.react('🆗');
     }
   } catch (e) {
     console.log(e);
