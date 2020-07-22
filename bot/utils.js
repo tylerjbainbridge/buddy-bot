@@ -3,6 +3,8 @@ import yargs from 'yargs';
 
 import { reddit, BOT_TEST_CHANNEL_ID } from './config';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const test = (trigger, content) =>
