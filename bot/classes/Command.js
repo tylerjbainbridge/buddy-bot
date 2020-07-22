@@ -1,6 +1,6 @@
-import _ from "lodash";
-import { removeFromString, getFlags } from "../utils";
-import { Voice } from "./Voice";
+import _ from 'lodash';
+import { removeFromString, getFlags } from '../utils';
+import { Voice } from './Voice';
 
 // const command = new Command({
 //   trigger: 'list|ls',
@@ -58,9 +58,9 @@ export class Command {
 
   getHelp(level = 0) {
     const help =
-      `${_.times(level * 2, () => "- ").join("")}\`${this.trigger}\`${
-        this.description ? `: ${this.description}` : ""
-      }` + "\n";
+      `${_.times(level * 2, () => '- ').join('')}\`${this.trigger}\`${
+        this.description ? `: ${this.description}` : ''
+      }` + '\n';
 
     if (this.commands && this.commands.length) {
       return this.commands.reduce((p, c) => (p += c.getHelp(level + 1)), help);
@@ -75,20 +75,17 @@ export class Command {
   isMatch(input, isStrict = false) {
     const sanitized = input.toLowerCase().trim();
 
-    let matchFunc = option => sanitized.startsWith(option);
+    let matchFunc = (option) => sanitized.startsWith(option);
 
     // Strict matching only matches on the first word.
     if (isStrict) {
-      const words = sanitized.split(" ");
+      const words = sanitized.split(' ');
       const matchWord = words.shift().trim();
 
-      matchFunc = option => matchWord === option;
+      matchFunc = (option) => matchWord === option;
     }
 
-    return this.trigger
-      .toLowerCase()
-      .split("|")
-      .find(matchFunc);
+    return this.trigger.toLowerCase().split('|').find(matchFunc);
   }
 
   /**
@@ -96,9 +93,11 @@ export class Command {
    * @param {*} input
    * @param {*} metas
    */
-  async run(input, initialMeta, { isStrict = false } = {}) {
+  async run(input, initialMeta, { isStrict = false, onMatch = null } = {}) {
     const match = this.isMatch(input, isStrict);
     if (!match) return false;
+
+    if (onMatch) onMatch();
 
     const meta = {
       match,
@@ -129,7 +128,7 @@ export class Command {
     }
 
     // Special case
-    if (nextInput === "help") {
+    if (nextInput === 'help') {
       meta.message.channel.send(this.getHelp());
       return true;
     } else if (this.useVoiceCommand) {
