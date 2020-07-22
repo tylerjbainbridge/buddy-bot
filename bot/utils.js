@@ -12,7 +12,9 @@ export const removeFromString = (string, toRemove) =>
   string.replace(new RegExp(toRemove, 'is'), '').trim();
 
 export const getBotChannel = (client) =>
-  client.channels.cache.get(BOT_TEST_CHANNEL_ID);
+  !isProduction
+    ? client.channels.cache.get(BOT_TEST_CHANNEL_ID)
+    : client.channels.get(BOT_TEST_CHANNEL_ID);
 
 export const getResolver = (resolvers, command) => {
   const resolverKeys = Object.keys(resolvers);
