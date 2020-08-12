@@ -1,3 +1,4 @@
+import { MessageAttachment } from 'discord.js';
 import axios from 'axios';
 import { sample } from 'lodash';
 import moment from 'moment';
@@ -77,26 +78,40 @@ export const commands = [
   }),
 
   new Command({
-    trigger: 'things jamie has said|thingsjamiehassaid|tjhs',
-    response: async () => {
+    trigger: 'things jamie has said|thingsjamiehassaid|tjhsi|tjhs',
+    action: async (nextInput, { message, match }) => {
       // Default: get random
       // const submission = await reddit
       //   .getSubreddit('thingsjamiehassaid')
       //   .getRandomSubmission();
 
-      const submissions = await reddit
+      let submissions = await reddit
         .getSubreddit('thingsjamiehassaid')
         .getHot({ limit: 1500 });
 
-      const idx = Math.floor(Math.random() * submissions.length + 1);
+      if (match === 'tjhsi' || nextInput === 'image') {
+        submissions = submissions.filter(({ url }) =>
+          url.includes('cdn.discordapp.com/attachments')
+        );
+      }
+
+      const idx = Math.floor(Math.random() * submissions.length);
 
       const submission = submissions[idx];
 
-      const { title, url, created } = await submission.fetch();
+      const { title, url, created, id } = await submission.fetch();
+
+      const postUrl = `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
 
       const date = moment.unix(created).format('MMMM Do YYYY');
 
-      return `${title} (${date})\n${url}`;
+      const args = [`${title} (${date})\n${postUrl}`];
+
+      if (url.includes('cdn.discordapp.com/attachments')) {
+        args.push(new MessageAttachment(url));
+      }
+
+      message.channel.send(...args);
     },
     commands: [
       new Command({

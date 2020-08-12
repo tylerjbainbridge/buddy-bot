@@ -140,7 +140,10 @@ export class Command {
       for (let i = 0; i < this.commands.length; i++) {
         const command = this.commands[i];
 
-        const subMatch = await command.run(nextInput, meta);
+        const subMatch = await command.run(nextInput, {
+          ...meta,
+          match: nextInput,
+        });
 
         // if (subMatch) console.log({ nextInput });
 

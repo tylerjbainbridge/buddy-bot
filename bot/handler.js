@@ -15,7 +15,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const TRIGGERS = isProduction
   ? ['bot', 'robot', 'alexa', 'rb', 'roomiobot', 'buddy bot', 'bb']
-  : ['test'];
+  : ['test', 't'];
 
 export const handler = (client, photon) => async (message) => {
   const { content } = message;
