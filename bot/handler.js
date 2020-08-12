@@ -3,7 +3,12 @@ import { commands } from '../commands';
 
 import { Users } from './classes/Users';
 
-import { postToJamieReddit, getFlags, getBotChannel } from './utils';
+import {
+  postToJamieReddit,
+  postLinkToJamieReddit,
+  getFlags,
+  getBotChannel,
+} from './utils';
 import { Store } from './classes/Store';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -57,9 +62,6 @@ export const handler = (client, photon) => async (message) => {
 
     const success = await root.run(input, meta, {
       isStrict: true,
-      onMatch: async () => {
-        await message.react('🤖');
-      },
     });
 
     if (success) {
@@ -74,25 +76,46 @@ export const handler = (client, photon) => async (message) => {
     }
   }
 
-  if (isProduction) {
-    const ONE_HOUR = 3600000;
+  const ONE_DAY = 86400000;
 
-    if (message.author.username) {
-      const collector = message.createReactionCollector(
-        (reaction, user) => {
-          console.log('reaction!', user.username, reaction.emoji.name);
-          return ['😇'].includes(reaction.emoji.name);
-        },
-        { time: ONE_HOUR }
-      );
+  if (message.author.username) {
+    const collector = message.createReactionCollector(
+      (reaction, user) => {
+        console.log('reaction!', user.username, reaction.emoji.name);
 
-      collector.on('collect', async (r) => {
+        if (!isProduction) return reaction.emoji.name === '🤖';
+
+        return ['😇'].includes(reaction.emoji.name);
+      },
+      { time: ONE_DAY }
+    );
+
+    collector.on('collect', async (r) => {
+      try {
         const name = message.author.username.toLowerCase();
-        const post = `"${message.content}" - ${name}`;
-        const url = await postToJamieReddit(post);
-        message.channel.send(`> ${post}\n${url}`);
-        collector.stop();
-      });
-    }
+
+        if (message.attachments.size) {
+          const [attachment] = [...message.attachments.values()];
+
+          const title = message.content
+            ? `"${message.content}" - ${name}`
+            : `Image - ${name}`;
+
+          const url = await postLinkToJamieReddit(title, attachment.url);
+
+          message.channel.send(`> ${title}\n${url}`, attachment);
+        } else {
+          const title = message.content
+            ? `"${message.content}" - ${name}`
+            : name;
+          const url = await postToJamieReddit(title);
+          message.channel.send(`> ${title}\n${url}`);
+        }
+      } catch {
+        message.channel.send('beep boop i broke while trying to post to tjhs');
+      }
+
+      collector.stop();
+    });
   }
 };

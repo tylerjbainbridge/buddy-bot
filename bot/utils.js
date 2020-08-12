@@ -40,16 +40,24 @@ export const getMessageFromResolver = async (resolvers, match, meta) =>
     ...meta,
   });
 
-export const postToJamieReddit = async (title) => {
-  try {
-    const submission = await reddit
-      .getSubreddit('thingsjamiehassaid')
-      .submitSelfpost({ title });
+export const postLinkToJamieReddit = async (title, url) => {
+  const submission = await reddit
+    .getSubreddit('thingsjamiehassaid')
+    .submitLink({ title, url });
 
-    return submission.url;
-  } catch (e) {
-    return e.message || 'Something went wrong';
-  }
+  const [_, id] = submission.name.split('_');
+
+  const postUrl = `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
+
+  return postUrl;
+};
+
+export const postToJamieReddit = async (title) => {
+  const submission = await reddit
+    .getSubreddit('thingsjamiehassaid')
+    .submitSelfpost({ title });
+
+  return submission.url;
 };
 
 export const getFlags = (input, customize) => {

@@ -97,7 +97,7 @@ export class Command {
     const match = this.isMatch(input, isStrict);
     if (!match) return false;
 
-    if (onMatch) onMatch();
+    // if (onMatch) onMatch();
 
     const meta = {
       match,
@@ -141,6 +141,8 @@ export class Command {
         const command = this.commands[i];
 
         const subMatch = await command.run(nextInput, meta);
+
+        // if (subMatch) console.log({ nextInput });
 
         // If there was a sub command match- we're done
         if (subMatch) return true;
