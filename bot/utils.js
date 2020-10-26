@@ -69,9 +69,10 @@ export const getFlags = (input, customize) => {
 };
 
 export const getGeneralChannel = (guild) => {
-  if (guild.channels.has(guild.id)) return guild.channels.get(guild.id);
+  if (guild.channels.cache.has(guild.id))
+    return guild.channels.cache.get(guild.id);
 
-  const generalChannel = guild.channels.find(
+  const generalChannel = guild.channels.cache.find(
     (channel) => channel.name === 'general' && channel.type !== 'voice'
   );
 

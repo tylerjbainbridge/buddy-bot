@@ -37,6 +37,7 @@ export const WEATHER_APP_ID = '70da43007f50c4366fbb4685ffe5ef67';
 export const BUDS_WITHOUT_COD = ['jam'];
 
 export const BOT_TEST_CHANNEL_ID = '649013668373200929';
+export const OUR_GUILD_ID = '648952976244736011';
 
 export const POLLY_VOICES = [
   'Justin',

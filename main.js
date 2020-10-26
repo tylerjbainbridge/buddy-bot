@@ -8,6 +8,7 @@ import { sleep, getBotChannel } from './bot/utils';
 import { handler } from './bot/handler';
 import { photon } from './bot/config';
 import { jobs } from './bot/jobs';
+import { runSchedule } from './bot/schedule';
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -20,8 +21,9 @@ export const client = new Discord.Client();
 if (process.env.DYNO) {
   (async () => {
     while (true) {
-      // Ping the heroku app every fifteen minutes to keep it from sleeping
-      await sleep(FIFTEEN_MINUTES);
+      // Ping the heroku app at random intervals to keep it from sleeping
+      const sleepTime = Math.floor(Math.random() * FIFTEEN_MINUTES) + 1;
+      await sleep(sleepTime);
       await axios.get('https://v-buddy-bot.herokuapp.com');
     }
   })();
@@ -30,9 +32,10 @@ if (process.env.DYNO) {
 client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}.`);
 
+  const channel = getBotChannel(client);
+
   if (process.env.DYNO) {
     const date = moment().tz('America/New_York').format('M/D/YYYY, h:mm:ss a');
-    const channel = getBotChannel(client);
 
     channel.send(`beep boop BuddyBot updated (${date})`);
 
@@ -41,6 +44,8 @@ client.once('ready', async () => {
       channel.send(`BuddyBot offline (updating)`);
     });
   }
+
+  runSchedule(client);
 
   // await Promise.all(jobs.map((job) => job(client, photon)));
 });
