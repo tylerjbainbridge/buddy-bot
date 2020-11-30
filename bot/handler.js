@@ -111,7 +111,9 @@ export const handler = (client, photon) => async (message) => {
           const url = await postToJamieReddit(title);
           message.channel.send(`> ${title}\n${url}`);
         }
-      } catch {
+      } catch (e) {
+        console.log(e);
+
         message.channel.send('beep boop i broke while trying to post to tjhs');
       }
 
