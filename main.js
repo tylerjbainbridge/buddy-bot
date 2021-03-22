@@ -4,11 +4,12 @@ import Discord from 'discord.js';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-import { sleep, getBotChannel } from './bot/utils';
+import { sleep, getBotChannel, refreshTjhsPosts } from './bot/utils';
 import { handler } from './bot/handler';
 import { photon } from './bot/config';
-import { jobs } from './bot/jobs';
 import { runSchedule } from './bot/schedule';
+
+moment.tz.setDefault('America/New_York');
 
 const FIFTEEN_MINUTES = 900000;
 
@@ -46,6 +47,7 @@ client.once('ready', async () => {
   }
 
   runSchedule(client);
+  refreshTjhsPosts();
 
   // await Promise.all(jobs.map((job) => job(client, photon)));
 });

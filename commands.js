@@ -2,8 +2,9 @@ import { MessageAttachment } from 'discord.js';
 import axios from 'axios';
 import { sample } from 'lodash';
 import moment from 'moment';
+import _ from 'lodash';
 
-import { postToJamieReddit, removeFromString } from './bot/utils';
+import { postToJamieReddit, submissions, refreshTjhsPosts } from './bot/utils';
 
 import { Command } from './bot/classes/Command';
 import { Voice } from './bot/classes/Voice';
@@ -85,19 +86,23 @@ export const commands = [
       //   .getSubreddit('thingsjamiehassaid')
       //   .getRandomSubmission();
 
-      let submissions = await reddit
-        .getSubreddit('thingsjamiehassaid')
-        .getHot({ limit: 1500 });
+      if (!submissions) await refreshTjhsPosts();
+
+      let filteredSubmissions = [...submissions];
 
       if (match === 'tjhsi' || nextInput === 'image') {
-        submissions = submissions.filter(({ url }) =>
+        filteredSubmissions = filteredSubmissions.filter(({ url }) =>
           url.includes('cdn.discordapp.com/attachments')
+        );
+      } else if (nextInput) {
+        const nextInputLower = nextInput.toLowerCase();
+
+        filteredSubmissions = filteredSubmissions.filter(({ title }) =>
+          title.toLowerCase().includes(nextInputLower)
         );
       }
 
-      const idx = Math.floor(Math.random() * submissions.length);
-
-      const submission = submissions[idx];
+      const submission = _.sample(filteredSubmissions);
 
       const { title, url, created, id } = await submission.fetch();
 
@@ -105,7 +110,7 @@ export const commands = [
 
       const date = moment.unix(created).format('MMMM Do YYYY (dddd), h:mm a');
 
-      const args = [`${title}\n${date}\n${postUrl}`];
+      const args = [`> ${title}\n${date}\n${postUrl}`];
 
       if (url.includes('cdn.discordapp.com/attachments')) {
         args.push(new MessageAttachment(url));

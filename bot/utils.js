@@ -5,6 +5,16 @@ import { reddit, BOT_TEST_CHANNEL_ID } from './config';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+export let submissions = null;
+
+export const refreshTjhsPosts = async () => {
+  console.log('refreshing posts...');
+  submissions = await reddit
+    .getSubreddit('thingsjamiehassaid')
+    .getHot({ limit: 1500 });
+  console.log('posts refreshed!');
+};
+
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const test = (trigger, content) =>
@@ -46,6 +56,8 @@ export const postLinkToJamieReddit = async (title, url) => {
     .submitLink({ title, url });
 
   const [_, id] = submission.name.split('_');
+
+  refreshTjhsPosts();
 
   const postUrl = `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
 
