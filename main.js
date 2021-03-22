@@ -46,8 +46,8 @@ client.once('ready', async () => {
     });
   }
 
-  runSchedule(client);
   refreshTjhsPosts();
+  runSchedule(client);
 
   // await Promise.all(jobs.map((job) => job(client, photon)));
 });

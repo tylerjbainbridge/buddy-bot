@@ -1,5 +1,4 @@
-import Discord, { MessageAttachment } from 'discord.js';
-import axios from 'axios';
+import { MessageAttachment } from 'discord.js';
 import moment from 'moment-timezone';
 
 import { sleep, getBotChannel, getGeneralChannel } from './utils';
@@ -16,7 +15,7 @@ const FRIDAY_MONKEY_PIC_URL =
 const FUNKY_MONKEY_FRIDAY_URL = 'https://i.imgur.com/TUrYck9.jpg';
 
 export const runSchedule = async (client) => {
-  const guild = client.guilds.cache.get(OUR_GUILD_ID);
+  const guild = await client.guilds.cache.get(OUR_GUILD_ID);
 
   const generalChannel = getGeneralChannel(guild);
 
