@@ -79,7 +79,7 @@ export const commands = [
   }),
 
   new Command({
-    trigger: 'things jamie has said|thingsjamiehassaid|tjhsi|tjhs',
+    trigger: 'things jamie has said|thingsjamiehassaid|tjhsi|tjhss|tjhs',
     action: async (nextInput, { message, match }) => {
       // Default: get random
       // const submission = await reddit
@@ -94,7 +94,7 @@ export const commands = [
         filteredSubmissions = filteredSubmissions.filter(({ url }) =>
           url.includes('cdn.discordapp.com/attachments')
         );
-      } else if (nextInput) {
+      } else if (match === 'tjhss' || nextInput) {
         const nextInputLower = nextInput.toLowerCase();
 
         filteredSubmissions = filteredSubmissions.filter(({ title }) =>
