@@ -103,9 +103,9 @@ export const commands = [
 
       const postUrl = `https://www.reddit.com/r/thingsjamiehassaid/comments/${id}`;
 
-      const date = moment.unix(created).tz('America/New_York').format('MMMM Do YYYY (dddd), h:mm:ss a');
+      const date = moment.unix(created).format('MMMM Do YYYY (dddd), h:mm a');
 
-      const args = [`${title} (${date})\n${postUrl}`];
+      const args = [`${title}\n${date}\n${postUrl}`];
 
       if (url.includes('cdn.discordapp.com/attachments')) {
         args.push(new MessageAttachment(url));
